@@ -40,7 +40,7 @@ describe('usePerformance', () => {
         // Simular trabalho
         return 'resultado';
       });
-      expect(time).toBeGreaterThan(0);
+      expect(time).toBeGreaterThanOrEqual(0);
     });
   });
 

@@ -26,6 +26,18 @@ const renderWithRouter = (component: React.ReactElement) => {
 describe('NotFound', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    window.alert = jest.fn();
+    Object.defineProperty(window, 'location', {
+      value: {
+        reload: jest.fn(),
+        href: '',
+        assign: jest.fn(),
+        replace: jest.fn(),
+        hash: '',
+        pathname: '/',
+      },
+      writable: true,
+    });
   });
 
   it('deve renderizar a página 404 corretamente', () => {
@@ -70,8 +82,8 @@ describe('NotFound', () => {
 
   it('deve ter botão de voltar', () => {
     renderWithRouter(<NotFound />);
-    
-    const backButton = screen.getByRole('button', { name: /voltar/i });
+    const backButtons = screen.getAllByRole('button');
+    const backButton = backButtons.find(btn => btn.textContent === 'Voltar' || btn.getAttribute('aria-label') === 'Voltar');
     expect(backButton).toBeInTheDocument();
   });
 
@@ -88,12 +100,10 @@ describe('NotFound', () => {
 
   it('deve ter funcionalidade de voltar', () => {
     renderWithRouter(<NotFound />);
-    
-    const backButton = screen.getByRole('button', { name: /voltar/i });
-    
+    const backButtons = screen.getAllByRole('button');
+    const backButton = backButtons.find(btn => btn.textContent === 'Voltar' || btn.getAttribute('aria-label') === 'Voltar');
     // Simular clique no botão
-    fireEvent.click(backButton);
-    
+    fireEvent.click(backButton!);
     expect(mockNavigate).toHaveBeenCalledWith(-1);
   });
 
@@ -150,7 +160,8 @@ describe('NotFound', () => {
     
     // Verificar se há links úteis
     expect(screen.getByText(/produtos/i)).toBeInTheDocument();
-    expect(screen.getByText(/contato/i)).toBeInTheDocument();
+    const contatos = screen.getAllByText(/contato/i);
+    expect(contatos.length).toBeGreaterThanOrEqual(1);
   });
 
   it('deve ter funcionalidade de busca', () => {

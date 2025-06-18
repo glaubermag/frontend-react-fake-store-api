@@ -1,10 +1,10 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
-import { ArrowLeft, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface Product {
@@ -18,6 +18,10 @@ interface Product {
     image: string;
   };
   images: string[];
+  rating?: {
+    rate: number;
+    count: number;
+  };
 }
 
 const ProductDetail = () => {
@@ -61,9 +65,11 @@ const ProductDetail = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-600 mb-4">Produto não encontrado</h2>
-          <Button onClick={() => navigate('/products')}>
-            Voltar aos Produtos
-          </Button>
+          <Link to="/products">
+            <Button>
+              Voltar aos Produtos
+            </Button>
+          </Link>
         </div>
       </div>
     );
@@ -76,14 +82,15 @@ const ProductDetail = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/products')}
-          className="mb-6 hover:bg-blue-50"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Voltar aos Produtos
-        </Button>
+        <Link to="/products">
+          <Button
+            variant="ghost"
+            className="mb-6 hover:bg-blue-50"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Voltar aos Produtos
+          </Button>
+        </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <motion.div
@@ -132,13 +139,20 @@ const ProductDetail = () => {
                 {product.title}
               </h1>
               <div className="text-4xl font-bold text-green-600 mb-6">
-                ${product.price}
+                {`R$ ${product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
               </div>
+              {product.rating && (
+                <div className="flex items-center gap-2 mb-4">
+                  <Star className="h-5 w-5 text-yellow-400" fill="#facc15" />
+                  <span className="text-lg font-semibold">{product.rating.rate}</span>
+                  <span className="text-slate-500">({product.rating.count})</span>
+                </div>
+              )}
             </div>
 
             <Card>
               <CardHeader>
-                <CardTitle>Descrição do Produto</CardTitle>
+                <h2 className="text-2xl font-semibold leading-none tracking-tight">Descrição do Produto</h2>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base leading-relaxed">

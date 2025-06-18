@@ -35,49 +35,93 @@ jest.mock('@/contexts/CartContext', () => ({
 }));
 
 // Mock do React Query
+let mockQueryState: { loading?: boolean; error?: boolean; empty?: boolean } = {};
 jest.mock('@tanstack/react-query', () => ({
-  useQuery: () => ({
-    data: [
-      {
-        id: 1,
-        title: 'Produto Teste 1',
-        price: 99.99,
-        description: 'Descrição do produto 1',
-        category: { 
-          id: 1, 
-          name: 'Eletrônicos',
-          image: 'https://example.com/category1.jpg'
-        },
-        images: ['https://example.com/image1.jpg'],
-        creationAt: '2024-01-01T00:00:00.000Z',
-        updatedAt: '2024-01-01T00:00:00.000Z',
-        rating: {
-          rate: 4.5,
-          count: 120
-        }
-      },
-      {
-        id: 2,
-        title: 'Produto Teste 2',
-        price: 149.99,
-        description: 'Descrição do produto 2',
-        category: { 
-          id: 2, 
-          name: 'Roupas',
-          image: 'https://example.com/category2.jpg'
-        },
-        images: ['https://example.com/image2.jpg'],
-        creationAt: '2024-01-01T00:00:00.000Z',
-        updatedAt: '2024-01-01T00:00:00.000Z',
-        rating: {
-          rate: 4.2,
-          count: 85
-        }
+  useQuery: ({ queryKey }) => {
+    if (mockQueryState.loading) {
+      return { isLoading: true };
+    }
+    if (mockQueryState.error) {
+      return { isLoading: false, error: true };
+    }
+    if (mockQueryState.empty) {
+      if (queryKey && queryKey[0] === 'categories') {
+        return {
+          data: [
+            { id: 1, name: 'Eletrônicos', image: 'https://example.com/category1.jpg' },
+            { id: 2, name: 'Roupas', image: 'https://example.com/category2.jpg' }
+          ],
+          isLoading: false,
+          error: null,
+          refetch: jest.fn()
+        };
       }
-    ],
-    isLoading: false,
-    error: null,
-    refetch: jest.fn()
+      return { data: [], isLoading: false, error: null };
+    }
+    if (queryKey && queryKey[0] === 'categories') {
+      return {
+        data: [
+          { id: 1, name: 'Eletrônicos', image: 'https://example.com/category1.jpg' },
+          { id: 2, name: 'Roupas', image: 'https://example.com/category2.jpg' }
+        ],
+        isLoading: false,
+        error: null,
+        refetch: jest.fn()
+      };
+    }
+    return {
+      data: [
+        {
+          id: 1,
+          title: 'Produto Teste 1',
+          price: 99.99,
+          description: 'Descrição do produto 1',
+          category: { 
+            id: 1, 
+            name: 'Eletrônicos',
+            image: 'https://example.com/category1.jpg'
+          },
+          images: ['https://example.com/image1.jpg'],
+          creationAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+          rating: {
+            rate: 4.5,
+            count: 120
+          }
+        },
+        {
+          id: 2,
+          title: 'Produto Teste 2',
+          price: 149.99,
+          description: 'Descrição do produto 2',
+          category: { 
+            id: 2, 
+            name: 'Roupas',
+            image: 'https://example.com/category2.jpg'
+          },
+          images: ['https://example.com/image2.jpg'],
+          creationAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+          rating: {
+            rate: 4.2,
+            count: 85
+          }
+        }
+      ],
+      isLoading: false,
+      error: null,
+      refetch: jest.fn()
+    };
+  },
+  useMutation: () => ({
+    mutate: jest.fn(),
+    isPending: false,
+    error: null
+  }),
+  useQueryClient: () => ({
+    invalidateQueries: jest.fn(),
+    refetchQueries: jest.fn(),
+    removeQueries: jest.fn(),
   }),
 }));
 
@@ -92,6 +136,7 @@ const renderWithRouter = (component: React.ReactElement) => {
 describe('Dashboard', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockQueryState = {};
   });
 
   it('deve renderizar o dashboard corretamente', () => {
@@ -209,57 +254,21 @@ describe('Dashboard', () => {
   });
 
   it('deve ter loading state', () => {
-    // Mock do loading state
-    jest.doMock('@tanstack/react-query', () => ({
-      useQuery: () => ({
-        data: null,
-        isLoading: true,
-        error: null,
-        refetch: jest.fn()
-      }),
-    }));
-    
+    mockQueryState.loading = true;
     renderWithRouter(<Dashboard />);
-    
-    // Verificar se há indicador de loading
-    const loadingElement = screen.getByText(/carregando/i);
-    expect(loadingElement).toBeInTheDocument();
+    expect(screen.getByText(/carregando/i)).toBeInTheDocument();
   });
 
   it('deve ter error state', () => {
-    // Mock do error state
-    jest.doMock('@tanstack/react-query', () => ({
-      useQuery: () => ({
-        data: null,
-        isLoading: false,
-        error: { message: 'Erro ao carregar produtos' },
-        refetch: jest.fn()
-      }),
-    }));
-    
+    mockQueryState.error = true;
     renderWithRouter(<Dashboard />);
-    
-    // Verificar se há mensagem de erro
-    const errorElement = screen.getByText(/erro ao carregar produtos/i);
-    expect(errorElement).toBeInTheDocument();
+    expect(screen.getByText(/erro ao carregar produtos/i)).toBeInTheDocument();
   });
 
   it('deve ter estado vazio quando não há produtos', () => {
-    // Mock do estado vazio
-    jest.doMock('@tanstack/react-query', () => ({
-      useQuery: () => ({
-        data: [],
-        isLoading: false,
-        error: null,
-        refetch: jest.fn()
-      }),
-    }));
-    
+    mockQueryState.empty = true;
     renderWithRouter(<Dashboard />);
-    
-    // Verificar se há mensagem de estado vazio
-    const emptyElement = screen.getByText(/nenhum produto encontrado/i);
-    expect(emptyElement).toBeInTheDocument();
+    expect(screen.getByText(/nenhum produto encontrado/i)).toBeInTheDocument();
   });
 
   it('deve ter paginação funcionando', () => {

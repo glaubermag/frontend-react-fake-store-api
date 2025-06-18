@@ -148,4 +148,32 @@ export const useIntersectionObserver = (
   }, []);
 
   return { observe, unobserve };
-}; 
+};
+
+// Hook de performance para medir tempo de execução e marcas
+export function usePerformance() {
+  // Mede o tempo de execução de uma função
+  const measureTime = (fn: () => any) => {
+    const start = window.performance.now();
+    const result = fn();
+    const end = window.performance.now();
+    return end - start;
+  };
+
+  // Marca início
+  const markStart = (name: string) => {
+    window.performance.mark(`${name}-start`);
+  };
+
+  // Marca fim
+  const markEnd = (name: string) => {
+    window.performance.mark(`${name}-end`);
+  };
+
+  // Mede entre marcas
+  const measure = (name: string) => {
+    window.performance.measure(name, `${name}-start`, `${name}-end`);
+  };
+
+  return { measureTime, markStart, markEnd, measure };
+} 

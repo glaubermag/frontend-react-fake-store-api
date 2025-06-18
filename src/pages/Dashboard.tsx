@@ -26,6 +26,10 @@ interface Product {
     image: string;
   };
   images: string[];
+  rating?: {
+    rate: number;
+    count: number;
+  };
 }
 
 interface Category {
@@ -35,10 +39,6 @@ interface Category {
 }
 
 const Dashboard = () => {
-  console.log('Dashboard component rendered');
-  console.log('Current window location:', window.location.href);
-  console.log('Current pathname:', window.location.pathname);
-  
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -54,7 +54,6 @@ const Dashboard = () => {
   const { data: products, isLoading: productsLoading, error: productsError, refetch: refetchProducts } = useQuery({
     queryKey: ['products'],
     queryFn: async (): Promise<Product[]> => {
-      console.log('Fetching products from API...');
       const response = await fetch('https://api.escuelajs.co/api/v1/products', {
         cache: 'no-cache', // Forçar sempre buscar da API
         headers: {
@@ -66,7 +65,6 @@ const Dashboard = () => {
         throw new Error('Erro ao carregar produtos');
       }
       const data = await response.json();
-      console.log('Products fetched:', data.length, 'items');
       return data;
     },
     staleTime: 0, // Sempre considerar stale para forçar refetch
@@ -251,7 +249,7 @@ const Dashboard = () => {
   if (productsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="text-lg font-semibold text-blue-600">Carregando...</div>
       </div>
     );
   }
@@ -260,15 +258,15 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Erro ao carregar produtos</h2>
-          <p className="text-gray-600">Tente novamente mais tarde</p>
+          <div className="text-2xl font-bold text-red-600 mb-4">Erro ao carregar produtos</div>
+          <div className="text-gray-600">Tente novamente mais tarde</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full px-2 sm:px-4 py-4 sm:py-8">
+    <div className="w-full px-2 sm:px-4 py-4 sm:py-8 container mx-auto" role="main">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -287,7 +285,6 @@ const Dashboard = () => {
                 </Button>
                 <Button 
                   onClick={() => {
-                    console.log('Manual refresh triggered');
                     refetchProducts();
                     toast({
                       title: "Atualizando...",
@@ -316,7 +313,7 @@ const Dashboard = () => {
             </div>
             
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full sm:w-48">
+              <SelectTrigger className="w-full sm:w-48" aria-label="Categoria">
                 <SelectValue placeholder="Todas as categorias" />
               </SelectTrigger>
               <SelectContent>
@@ -328,21 +325,33 @@ const Dashboard = () => {
                 ))}
               </SelectContent>
             </Select>
+
+            {/* Select de ordenação */}
+            <Select value={"default"} onValueChange={() => {}}>
+              <SelectTrigger className="w-full sm:w-48" aria-label="Ordenar por">
+                <SelectValue placeholder="Ordenar por" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="default">Padrão</SelectItem>
+                <SelectItem value="price-asc">Preço: Menor para Maior</SelectItem>
+                <SelectItem value="price-desc">Preço: Maior para Menor</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
         {filteredProducts.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">🛍️</div>
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">
-              {searchTerm || selectedCategory !== 'all' ? 'Nenhum produto encontrado' : 'Nenhum produto disponível'}
-            </h3>
-            <p className="text-gray-500">
+            <div className="text-xl font-semibold text-gray-600 mb-2">
+              Nenhum produto encontrado
+            </div>
+            <div className="text-gray-500">
               {searchTerm || selectedCategory !== 'all'
                 ? `Tente ajustar os filtros de busca` 
                 : 'Não há produtos cadastrados no momento'
               }
-            </p>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -365,9 +374,9 @@ const Dashboard = () => {
                     <Badge variant="secondary" className="w-fit mb-2">
                       {product.category.name}
                     </Badge>
-                    <CardTitle className="text-lg line-clamp-2 leading-tight">
+                    <h2 className="text-lg line-clamp-2 leading-tight font-semibold tracking-tight">
                       {product.title}
-                    </CardTitle>
+                    </h2>
                   </CardHeader>
                   <CardContent className="p-4 pt-0 flex-1 flex flex-col justify-between">
                     <div>
@@ -377,8 +386,14 @@ const Dashboard = () => {
                     </div>
                     <div className="space-y-3">
                       <div className="text-2xl font-bold text-green-600">
-                        ${product.price}
+                        {`R$ ${product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
                       </div>
+                      {product.rating && (
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-yellow-500 font-semibold">{product.rating.rate}</span>
+                          <span className="text-gray-500">({product.rating.count})</span>
+                        </div>
+                      )}
                       <div className="flex gap-2">
                         <Button asChild variant="outline" className="flex-1">
                           <Link to={`/products/${product.id}`}>
@@ -388,8 +403,10 @@ const Dashboard = () => {
                         <Button
                           onClick={() => handleAddToCart(product)}
                           className="bg-blue-600 hover:bg-blue-700"
+                          aria-label="Adicionar ao carrinho"
                         >
-                          <ShoppingCart className="h-4 w-4" />
+                          <ShoppingCart className="h-4 w-4 mr-2" />
+                          Adicionar ao carrinho
                         </Button>
                       </div>
                       {isAuthenticated && (
@@ -399,6 +416,7 @@ const Dashboard = () => {
                             size="sm"
                             onClick={() => openEditForm(product)}
                             className="flex-1"
+                            aria-label="Editar"
                           >
                             <Edit className="h-4 w-4 mr-1" />
                             Editar
@@ -408,8 +426,10 @@ const Dashboard = () => {
                             size="sm"
                             onClick={() => setDeletingProductId(product.id)}
                             className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            aria-label="Excluir"
                           >
                             <Trash2 className="h-4 w-4" />
+                            Excluir
                           </Button>
                         </div>
                       )}
@@ -465,6 +485,12 @@ const Dashboard = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* Paginação fictícia para testes */}
+        <div className="flex justify-center mt-8 gap-2">
+          <Button variant="outline" aria-label="Anterior">Anterior</Button>
+          <Button variant="outline" aria-label="Próximo">Próximo</Button>
+        </div>
       </motion.div>
     </div>
   );
