@@ -1,6 +1,6 @@
 # E-commerce com Fake Store API
 
-Este é um projeto de e-commerce desenvolvido com React, TypeScript e Vite, consumindo a Fake Store API. O projeto demonstra boas práticas de desenvolvimento front-end, incluindo testes automatizados, responsividade e uma arquitetura escalável.
+Este é um projeto de e-commerce desenvolvido com React, TypeScript e Vite, consumindo a Fake Store API. O projeto demonstra boas práticas de desenvolvimento front-end, incluindo testes automatizados, responsividade, PWA (Progressive Web App) e uma arquitetura escalável.
 
 ## 🚀 Tecnologias
 
@@ -14,6 +14,74 @@ Este é um projeto de e-commerce desenvolvido com React, TypeScript e Vite, cons
 - [Jest](https://jestjs.io) - Framework de testes unitários
 - [Playwright](https://playwright.dev) - Framework de testes E2E
 - [Husky](https://typicode.github.io/husky) - Git hooks para qualidade de código
+- [PWA](https://web.dev/progressive-web-apps/) - Progressive Web App
+
+## 📱 PWA (Progressive Web App)
+
+O projeto foi transformado em uma PWA completa com as seguintes funcionalidades:
+
+### ✨ Funcionalidades PWA
+
+- **📱 Instalável** - Pode ser instalado como app nativo
+- **🔧 Service Worker** - Cache inteligente e funcionamento offline
+- **🎨 Splash Screen** - Tela de carregamento personalizada
+- **📲 Manifest** - Configuração completa para instalação
+- **🔄 Atualizações Automáticas** - Notificações de novas versões
+- **📶 Indicador Offline** - Feedback visual quando offline
+- **⚡ Performance Otimizada** - Cache estratégico de recursos
+- **🎯 Shortcuts** - Atalhos rápidos para funcionalidades principais
+
+### 🛠️ Configuração PWA
+
+```bash
+# Gerar ícones PWA
+npm run generate-icons
+
+# Build com PWA
+npm run build
+```
+
+### 📋 Checklist PWA
+
+- [x] **Web App Manifest** - Configuração completa
+- [x] **Service Worker** - Cache e funcionalidade offline
+- [x] **Ícones PWA** - Múltiplos tamanhos (72x72 até 512x512)
+- [x] **Meta Tags** - Configuração para iOS e Android
+- [x] **Splash Screen** - Tela de carregamento personalizada
+- [x] **Instalação** - Prompt de instalação automático
+- [x] **Atualizações** - Notificações de novas versões
+- [x] **Offline** - Funcionamento sem conexão
+- [x] **Performance** - Cache estratégico de recursos
+
+### 🎨 Ícones Gerados
+
+- `icon-72x72.png` - Para dispositivos pequenos
+- `icon-96x96.png` - Para Android
+- `icon-128x128.png` - Para Windows
+- `icon-144x144.png` - Para iOS
+- `icon-152x152.png` - Para iPad
+- `icon-192x192.png` - Para Android (alta resolução)
+- `icon-384x384.png` - Para Android (2x)
+- `icon-512x512.png` - Para Android (3x)
+- `apple-touch-icon.png` - Para iOS
+- `mask-icon.svg` - Para Safari
+
+### 🔧 Service Worker
+
+O service worker implementa estratégias de cache inteligentes:
+
+- **API**: Network First com fallback para cache
+- **Assets**: Cache First para melhor performance
+- **Páginas**: Network First com fallback offline
+- **Atualizações**: Detecção automática de novas versões
+
+### 📱 Experiência Mobile
+
+- **Instalação Nativa** - Prompt automático de instalação
+- **Modo Standalone** - Remove a barra de navegação do navegador
+- **Splash Screen** - Tela de carregamento personalizada
+- **Shortcuts** - Atalhos para produtos e carrinho
+- **Responsividade** - Interface otimizada para touch
 
 ## ⚡ Por que Vite?
 
@@ -155,6 +223,13 @@ npm run test:e2e:headed
 - [x] **Responsividade** - Interface adaptável para mobile e desktop
 - [x] **Feedback Visual** - Loading states, estados vazios, tratamento de erros
 - [x] **Menu Mobile** - Navegação otimizada para dispositivos móveis
+- [x] **PWA (Progressive Web App)** - App instalável com funcionalidades nativas
+  - [x] **Instalação Nativa** - Pode ser instalado como app
+  - [x] **Funcionamento Offline** - Cache inteligente de recursos
+  - [x] **Splash Screen** - Tela de carregamento personalizada
+  - [x] **Atualizações Automáticas** - Notificações de novas versões
+  - [x] **Indicador Offline** - Feedback visual quando sem conexão
+  - [x] **Shortcuts** - Atalhos rápidos para funcionalidades principais
 
 ## 🔄 CI/CD
 

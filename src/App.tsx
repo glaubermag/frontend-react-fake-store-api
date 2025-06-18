@@ -5,6 +5,9 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import Navbar from './components/Navbar';
+import { PWAInstallPrompt } from './components/PWAInstallPrompt';
+import { OfflineIndicator } from './components/OfflineIndicator';
+import { PWASplashScreen } from './components/PWASplashScreen';
 import './App.css';
 
 // Lazy loading das páginas
@@ -41,6 +44,8 @@ function App() {
         <CartProvider>
           <Router>
             <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+              <PWASplashScreen />
+              <OfflineIndicator />
               <Navbar />
               <main className="container mx-auto px-4 py-8">
                 <Suspense fallback={<LoadingSpinner />}>
@@ -56,6 +61,7 @@ function App() {
                 </Suspense>
               </main>
               <Toaster />
+              <PWAInstallPrompt />
             </div>
           </Router>
         </CartProvider>
