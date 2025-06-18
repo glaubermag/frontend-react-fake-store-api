@@ -9,8 +9,8 @@ test.describe('Navegação', () => {
 
   test('deve navegar para o carrinho', async ({ page }) => {
     await page.goto('http://localhost:8080');
-    const cartLink = page.locator('a:has(svg)').filter({ hasText: '' });
-    await cartLink.first().click();
+    const cartLink = page.locator('a[href="/cart"]');
+    await cartLink.click();
     await expect(page).toHaveURL(/.*cart/);
   });
 
