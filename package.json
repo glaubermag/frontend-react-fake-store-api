@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:analyze": "tsc && vite build --mode analyze",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "jest",
@@ -17,7 +18,10 @@
     "format": "prettier --write .",
     "update-browserslist-db": "npx update-browserslist-db@latest",
     "prepare": "husky",
-    "generate-icons": "node scripts/generate-icons.js"
+    "generate-icons": "node scripts/generate-icons.js",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "type-check": "tsc --noEmit",
+    "bundle-size": "npm run build && npx vite-bundle-analyzer dist/assets"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -42,6 +46,7 @@
     "react-hook-form": "^7.51.0",
     "react-router-dom": "^6.22.2",
     "react-window": "^1.8.11",
+    "sharp-ico": "^0.1.5",
     "sonner": "^1.4.3",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",

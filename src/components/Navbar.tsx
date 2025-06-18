@@ -10,18 +10,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useState } from 'react';
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const { itemCount } = useCart();
   const location = useLocation();
-  const [open, setOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleMobileLinkClick = (path: string) => {
+    console.log('Mobile link clicked:', path);
+    setMobileMenuOpen(false);
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
-      <div className="container mx-auto px-4">
+      <div className="w-full px-2 sm:px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <Store className="h-8 w-8 text-blue-600" />
@@ -78,52 +82,60 @@ const Navbar = () => {
 
           {/* Menu Mobile */}
           <div className="md:hidden flex items-center">
-            <Sheet open={open} onOpenChange={setOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Abrir menu">
-                  <Menu className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-64">
-                <nav className="flex flex-col gap-2 p-6">
-                  <Button asChild variant="ghost" className="justify-start w-full" onClick={() => setOpen(false)}>
-                    <Link to="/products">Produtos</Link>
-                  </Button>
-                  <Button asChild variant="ghost" className="justify-start w-full" onClick={() => setOpen(false)}>
-                    <Link to="/cart">
-                      <span className="flex items-center gap-2">
-                        <ShoppingCart className="h-5 w-5" />
-                        Carrinho
-                        {itemCount > 0 && (
-                          <Badge className="ml-2 h-5 w-5 flex items-center justify-center p-0 bg-red-500 text-white text-xs">
-                            {itemCount}
-                          </Badge>
-                        )}
-                      </span>
-                    </Link>
-                  </Button>
-                  {isAuthenticated ? (
-                    <Button variant="ghost" className="justify-start w-full" onClick={() => { logout(); setOpen(false); }}>
-                      <span className="flex items-center gap-2">
-                        <LogOut className="h-4 w-4" />
-                        Sair
-                      </span>
-                    </Button>
-                  ) : (
-                    <>
-                      <Button asChild variant="outline" className="justify-start w-full mb-2" onClick={() => setOpen(false)}>
-                        <Link to="/login">Login</Link>
-                      </Button>
-                      <Button asChild className="justify-start w-full" onClick={() => setOpen(false)}>
-                        <Link to="/register">Registrar</Link>
-                      </Button>
-                    </>
-                  )}
-                </nav>
-              </SheetContent>
-            </Sheet>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              aria-label="Abrir menu"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <Menu className="h-6 w-6" />
+            </Button>
           </div>
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        {mobileMenuOpen && (
+          <div className="md:hidden absolute top-16 left-0 right-0 bg-white border-b border-slate-200 shadow-lg z-50">
+            <nav className="flex flex-col gap-2 p-4">
+              <Button asChild variant="ghost" className="justify-start w-full">
+                <Link to="/products" onClick={() => handleMobileLinkClick('/products')}>Produtos</Link>
+              </Button>
+              <Button asChild variant="ghost" className="justify-start w-full">
+                <Link to="/test" onClick={() => handleMobileLinkClick('/test')}>Teste</Link>
+              </Button>
+              <Button asChild variant="ghost" className="justify-start w-full">
+                <Link to="/cart" onClick={() => handleMobileLinkClick('/cart')}>
+                  <span className="flex items-center gap-2">
+                    <ShoppingCart className="h-5 w-5" />
+                    Carrinho
+                    {itemCount > 0 && (
+                      <Badge className="ml-2 h-5 w-5 flex items-center justify-center p-0 bg-red-500 text-white text-xs">
+                        {itemCount}
+                      </Badge>
+                    )}
+                  </span>
+                </Link>
+              </Button>
+              {isAuthenticated ? (
+                <Button variant="ghost" className="justify-start w-full" onClick={() => { logout(); setMobileMenuOpen(false); }}>
+                  <span className="flex items-center gap-2">
+                    <LogOut className="h-4 w-4" />
+                    Sair
+                  </span>
+                </Button>
+              ) : (
+                <>
+                  <Button asChild variant="outline" className="justify-start w-full mb-2">
+                    <Link to="/login" onClick={() => handleMobileLinkClick('/login')}>Login</Link>
+                  </Button>
+                  <Button asChild className="justify-start w-full">
+                    <Link to="/register" onClick={() => handleMobileLinkClick('/register')}>Registrar</Link>
+                  </Button>
+                </>
+              )}
+            </nav>
+          </div>
+        )}
       </div>
     </nav>
   );

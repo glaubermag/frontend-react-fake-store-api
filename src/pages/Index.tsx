@@ -29,13 +29,13 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="w-full min-h-screen">
       {/* Hero Section */}
       <motion.section 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="container mx-auto px-4 py-20 text-center"
+        className="w-full px-2 sm:px-4 py-12 sm:py-20 text-center"
       >
         <div className="max-w-4xl mx-auto">
           <motion.h1 
@@ -76,13 +76,13 @@ const Index = () => {
       </motion.section>
 
       {/* Features Section */}
-      <section className="container mx-auto px-4 py-20">
+      <section className="w-full px-2 sm:px-4 py-12 sm:py-20">
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-16 max-w-6xl mx-auto"
         >
           <h2 className="text-4xl font-bold text-slate-800 mb-4">
             Por que escolher nossa loja?
@@ -92,7 +92,7 @@ const Index = () => {
           </p>
         </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -125,23 +125,25 @@ const Index = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="container mx-auto px-4 py-20"
+        className="w-full px-2 sm:px-4 py-12 sm:py-20"
       >
-        <Card className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 border-0 text-white">
-          <CardContent className="text-center py-16">
-            <h3 className="text-3xl md:text-4xl font-bold mb-4">
-              Pronto para começar suas compras?
-            </h3>
-            <p className="text-xl mb-8 text-blue-100">
-              Junte-se a milhares de clientes satisfeitos
-            </p>
-            <Button asChild size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg font-semibold">
-              <Link to="/products">
-                Ver Produtos <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="max-w-6xl mx-auto">
+          <Card className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 border-0 text-white">
+            <CardContent className="text-center py-16">
+              <h3 className="text-3xl md:text-4xl font-bold mb-4">
+                Pronto para começar suas compras?
+              </h3>
+              <p className="text-xl mb-8 text-blue-100">
+                Junte-se a milhares de clientes satisfeitos
+              </p>
+              <Button asChild size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg font-semibold">
+                <Link to="/products">
+                  Ver Produtos <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </motion.section>
     </div>
   );

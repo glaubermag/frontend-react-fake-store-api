@@ -70,7 +70,7 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-2 sm:px-4 py-4 sm:py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

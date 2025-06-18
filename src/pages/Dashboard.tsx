@@ -10,7 +10,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import { Search, ShoppingCart, Plus, Edit, Trash2 } from 'lucide-react';
+import { Search, ShoppingCart, Plus, Edit, Trash2, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ProductForm from '@/components/ProductForm';
 import { useToast } from '@/hooks/use-toast';
@@ -35,6 +35,10 @@ interface Category {
 }
 
 const Dashboard = () => {
+  console.log('Dashboard component rendered');
+  console.log('Current window location:', window.location.href);
+  console.log('Current pathname:', window.location.pathname);
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -47,15 +51,29 @@ const Dashboard = () => {
   const queryClient = useQueryClient();
 
   // Fetch products
-  const { data: products, isLoading: productsLoading, error: productsError } = useQuery({
+  const { data: products, isLoading: productsLoading, error: productsError, refetch: refetchProducts } = useQuery({
     queryKey: ['products'],
     queryFn: async (): Promise<Product[]> => {
-      const response = await fetch('https://api.escuelajs.co/api/v1/products');
+      console.log('Fetching products from API...');
+      const response = await fetch('https://api.escuelajs.co/api/v1/products', {
+        cache: 'no-cache', // Forçar sempre buscar da API
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
       if (!response.ok) {
         throw new Error('Erro ao carregar produtos');
       }
-      return response.json();
+      const data = await response.json();
+      console.log('Products fetched:', data.length, 'items');
+      return data;
     },
+    staleTime: 0, // Sempre considerar stale para forçar refetch
+    gcTime: 0, // Não manter no cache
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
   });
 
   // Fetch categories
@@ -86,7 +104,16 @@ const Dashboard = () => {
       return response.json();
     },
     onSuccess: () => {
+      // Forçar invalidação e refresh do cache
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.refetchQueries({ queryKey: ['products'] });
+      
+      // Limpar cache específico se necessário
+      queryClient.removeQueries({ queryKey: ['products'], exact: false });
+      
+      // Forçar refetch imediato
+      refetchProducts();
+      
       setIsFormOpen(false);
       toast({
         title: "Sucesso!",
@@ -118,7 +145,16 @@ const Dashboard = () => {
       return response.json();
     },
     onSuccess: () => {
+      // Forçar invalidação e refresh do cache
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.refetchQueries({ queryKey: ['products'] });
+      
+      // Limpar cache específico se necessário
+      queryClient.removeQueries({ queryKey: ['products'], exact: false });
+      
+      // Forçar refetch imediato
+      refetchProducts();
+      
       setEditingProduct(null);
       setIsFormOpen(false);
       toast({
@@ -147,7 +183,16 @@ const Dashboard = () => {
       return response.json();
     },
     onSuccess: () => {
+      // Forçar invalidação e refresh do cache
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.refetchQueries({ queryKey: ['products'] });
+      
+      // Limpar cache específico se necessário
+      queryClient.removeQueries({ queryKey: ['products'], exact: false });
+      
+      // Forçar refetch imediato
+      refetchProducts();
+      
       setDeletingProductId(null);
       toast({
         title: "Sucesso!",
@@ -223,7 +268,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full px-2 sm:px-4 py-4 sm:py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -235,10 +280,27 @@ const Dashboard = () => {
               Nossos Produtos
             </h1>
             {isAuthenticated && (
-              <Button onClick={() => setIsFormOpen(true)} className="bg-green-600 hover:bg-green-700">
-                <Plus className="h-4 w-4 mr-2" />
-                Novo Produto
-              </Button>
+              <div className="flex gap-2">
+                <Button onClick={() => setIsFormOpen(true)} className="bg-green-600 hover:bg-green-700">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Novo Produto
+                </Button>
+                <Button 
+                  onClick={() => {
+                    console.log('Manual refresh triggered');
+                    refetchProducts();
+                    toast({
+                      title: "Atualizando...",
+                      description: "Buscando dados mais recentes da API.",
+                    });
+                  }}
+                  variant="outline"
+                  disabled={productsLoading}
+                >
+                  <RefreshCw className={`h-4 w-4 mr-2 ${productsLoading ? 'animate-spin' : ''}`} />
+                  Atualizar
+                </Button>
+              </div>
             )}
           </div>
           
@@ -319,7 +381,7 @@ const Dashboard = () => {
                       </div>
                       <div className="flex gap-2">
                         <Button asChild variant="outline" className="flex-1">
-                          <Link to={`/product/${product.id}`}>
+                          <Link to={`/products/${product.id}`}>
                             Ver Detalhes
                           </Link>
                         </Button>

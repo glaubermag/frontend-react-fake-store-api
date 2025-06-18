@@ -64,7 +64,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="w-full px-2 sm:px-4 py-4 sm:py-8 flex flex-col items-center justify-center min-h-[70vh]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

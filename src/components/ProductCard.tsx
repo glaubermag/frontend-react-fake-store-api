@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
+import { ShoppingCart, Star } from 'lucide-react';
 
 interface Product {
   id: number;
@@ -18,6 +19,10 @@ interface Product {
   images: string[];
   creationAt: string;
   updatedAt: string;
+  rating: {
+    rate: number;
+    count: number;
+  };
 }
 
 interface ProductCardProps {
@@ -64,7 +69,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
     <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300">
       <CardHeader className="p-4">
         <Link 
-          to={`/product/${product.id}`}
+          to={`/products/${product.id}`}
           className="block aspect-square overflow-hidden rounded-lg cursor-pointer group"
         >
           <img
@@ -84,7 +89,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
         </Link>
         <div className="mt-4 space-y-2">
           <Link 
-            to={`/product/${product.id}`}
+            to={`/products/${product.id}`}
             className="block hover:text-blue-600 transition-colors duration-200"
           >
             <h3 className="font-semibold text-lg line-clamp-2 cursor-pointer">
@@ -105,21 +110,30 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
       
       <CardFooter className="p-4 pt-0 space-y-3">
         <div className="flex items-center justify-between w-full">
+          {product.rating && (
+            <div className="flex items-center gap-1">
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <span className="text-sm font-medium">{product.rating.rate}</span>
+              <span className="text-sm text-gray-500">({product.rating.count})</span>
+            </div>
+          )}
           <span className="text-xl font-bold text-green-600">
             {formattedPrice}
           </span>
-          <Button
-            onClick={handleAddToCart}
-            disabled={isInCart}
-            className="flex-1 ml-2"
-            variant={isInCart ? "secondary" : "default"}
-          >
-            {isInCart ? 'Adicionado' : 'Adicionar ao Carrinho'}
-          </Button>
         </div>
         
+        <Button
+          onClick={handleAddToCart}
+          disabled={isInCart}
+          className="flex-1 ml-2"
+          variant={isInCart ? "secondary" : "default"}
+        >
+          <ShoppingCart className="h-4 w-4 mr-2" />
+          {isInCart ? 'Adicionado' : 'Adicionar ao Carrinho'}
+        </Button>
+        
         <Link 
-          to={`/product/${product.id}`}
+          to={`/products/${product.id}`}
           className="w-full"
         >
           <Button variant="outline" className="w-full">

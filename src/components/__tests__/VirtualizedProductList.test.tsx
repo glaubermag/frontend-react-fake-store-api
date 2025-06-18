@@ -30,7 +30,11 @@ const mockProducts = [
     },
     images: ['https://example.com/image1.jpg'],
     creationAt: '2024-01-01T00:00:00.000Z',
-    updatedAt: '2024-01-01T00:00:00.000Z'
+    updatedAt: '2024-01-01T00:00:00.000Z',
+    rating: {
+      rate: 4.5,
+      count: 120
+    }
   },
   {
     id: 2,
@@ -44,7 +48,11 @@ const mockProducts = [
     },
     images: ['https://example.com/image2.jpg'],
     creationAt: '2024-01-01T00:00:00.000Z',
-    updatedAt: '2024-01-01T00:00:00.000Z'
+    updatedAt: '2024-01-01T00:00:00.000Z',
+    rating: {
+      rate: 4.2,
+      count: 85
+    }
   }
 ];
 

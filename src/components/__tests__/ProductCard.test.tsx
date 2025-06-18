@@ -64,7 +64,7 @@ describe('ProductCard', () => {
     
     // Verificar se a imagem está dentro de um link
     const imageLink = productImage.closest('a');
-    expect(imageLink).toHaveAttribute('href', '/product/1');
+    expect(imageLink).toHaveAttribute('href', '/products/1');
   });
 
   it('deve ter título clicável que navega para detalhes do produto', () => {
@@ -75,7 +75,7 @@ describe('ProductCard', () => {
     
     // Verificar se o título está dentro de um link
     const titleLink = productTitle.closest('a');
-    expect(titleLink).toHaveAttribute('href', '/product/1');
+    expect(titleLink).toHaveAttribute('href', '/products/1');
   });
 
   it('deve adicionar produto ao carrinho quando clicar no botão', () => {
@@ -100,7 +100,7 @@ describe('ProductCard', () => {
     
     // Verificar se o botão está dentro de um link
     const detailsLink = detailsButton.closest('a');
-    expect(detailsLink).toHaveAttribute('href', '/product/1');
+    expect(detailsLink).toHaveAttribute('href', '/products/1');
   });
 
   it('deve truncar descrição longa', () => {
