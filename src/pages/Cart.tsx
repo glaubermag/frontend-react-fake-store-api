@@ -92,14 +92,15 @@ const Cart = () => {
                       </div>
                       <div className="flex-1">
                         <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-semibold text-lg line-clamp-2">
+                          <h2 className="font-semibold text-lg line-clamp-2">
                             {item.title}
-                          </h3>
+                          </h2>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => removeItem(item.id)}
                             className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            aria-label="Remover item"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -111,6 +112,7 @@ const Cart = () => {
                               size="sm"
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
                               disabled={item.quantity <= 1}
+                              aria-label="Diminuir quantidade"
                             >
                               <Minus className="h-3 w-3" />
                             </Button>
@@ -121,6 +123,7 @@ const Cart = () => {
                               variant="outline"
                               size="sm"
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              aria-label="Aumentar quantidade"
                             >
                               <Plus className="h-3 w-3" />
                             </Button>

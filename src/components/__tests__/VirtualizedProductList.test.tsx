@@ -10,6 +10,7 @@ expect.extend(toHaveNoViolations);
 // Mock do contexto de carrinho
 jest.mock('@/contexts/CartContext', () => ({
   useCart: () => ({
+    items: [],
     addToCart: jest.fn(),
     removeFromCart: jest.fn(),
     isInCart: jest.fn().mockReturnValue(false)

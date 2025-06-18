@@ -110,14 +110,15 @@ describe('Cart', () => {
       renderWithRouter(<Cart />);
       
       expect(screen.getByText(/subtotal/i)).toBeInTheDocument();
-      expect(screen.getByText(/\$349\.97/)).toBeInTheDocument();
+      const totals = screen.getAllByText(/\$349\.97/);
+      expect(totals.length).toBeGreaterThan(0);
     });
 
     it('deve permitir atualizar quantidade de itens', () => {
       renderWithRouter(<Cart />);
       
-      const minusButtons = screen.getAllByRole('button', { name: /minus/i });
-      const plusButtons = screen.getAllByRole('button', { name: /plus/i });
+      const minusButtons = screen.getAllByRole('button', { name: /diminuir quantidade/i });
+      const plusButtons = screen.getAllByRole('button', { name: /aumentar quantidade/i });
       
       expect(minusButtons.length).toBeGreaterThan(0);
       expect(plusButtons.length).toBeGreaterThan(0);
@@ -131,7 +132,7 @@ describe('Cart', () => {
     it('deve permitir remover itens do carrinho', () => {
       renderWithRouter(<Cart />);
       
-      const removeButtons = screen.getAllByRole('button', { name: /trash/i });
+      const removeButtons = screen.getAllByRole('button', { name: /remover item/i });
       expect(removeButtons.length).toBeGreaterThan(0);
       
       fireEvent.click(removeButtons[0]);
@@ -170,13 +171,17 @@ describe('Cart', () => {
     it('deve ter botões com labels acessíveis', () => {
       renderWithRouter(<Cart />);
       
-      const removeButtons = screen.getAllByRole('button', { name: /trash/i });
+      const removeButtons = screen.getAllByRole('button', { name: /remover item/i });
       const clearButton = screen.getByRole('button', { name: /limpar carrinho/i });
       const checkoutButton = screen.getByRole('button', { name: /finalizar compra/i });
+      const minusButtons = screen.getAllByRole('button', { name: /diminuir quantidade/i });
+      const plusButtons = screen.getAllByRole('button', { name: /aumentar quantidade/i });
       
       expect(removeButtons.length).toBeGreaterThan(0);
       expect(clearButton).toBeInTheDocument();
       expect(checkoutButton).toBeInTheDocument();
+      expect(minusButtons.length).toBeGreaterThan(0);
+      expect(plusButtons.length).toBeGreaterThan(0);
     });
 
     it('não deve ter violações de acessibilidade', async () => {
@@ -198,8 +203,10 @@ describe('Cart', () => {
     it('deve exibir preços formatados corretamente', () => {
       renderWithRouter(<Cart />);
       
-      expect(screen.getByText(/\$199\.98/)).toBeInTheDocument(); // 99.99 * 2
-      expect(screen.getByText(/\$149\.99/)).toBeInTheDocument(); // 149.99 * 1
+      const prices199 = screen.getAllByText(/\$199\.98/);
+      const prices149 = screen.getAllByText(/\$149\.99/);
+      expect(prices199.length).toBeGreaterThan(0);
+      expect(prices149.length).toBeGreaterThan(0);
     });
 
     it('deve mostrar quantidade de itens corretamente', () => {
@@ -212,19 +219,21 @@ describe('Cart', () => {
     it('deve ter links de navegação acessíveis', () => {
       renderWithRouter(<Cart />);
       
-      const continueShoppingLink = screen.getByRole('link', { name: /continuar comprando/i });
-      expect(continueShoppingLink).toBeInTheDocument();
-      expect(continueShoppingLink).toHaveAttribute('href', '/products');
+      const continueShoppingLinks = screen.getAllByRole('link', { name: /continuar comprando/i });
+      expect(continueShoppingLinks.length).toBeGreaterThan(0);
+      continueShoppingLinks.forEach(link => {
+        expect(link).toHaveAttribute('href', '/products');
+      });
     });
 
     it('deve ter contraste adequado nos elementos', () => {
       renderWithRouter(<Cart />);
       
       const title = screen.getByText('Carrinho de Compras');
-      const totalText = screen.getByText(/total/i);
+      const totalTexts = screen.getAllByText(/total/i);
       
       expect(title).toBeInTheDocument();
-      expect(totalText).toBeInTheDocument();
+      expect(totalTexts.length).toBeGreaterThan(0);
     });
   });
 }); 
