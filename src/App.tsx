@@ -46,7 +46,7 @@ function App() {
               <PWAInstallPrompt />
               <Navbar />
               
-              <main className="w-full px-2 sm:px-4 py-4 sm:py-8">
+              <main className="w-full px-2 sm:px-4 py-4 sm:py-8 pt-24">
                 <Suspense fallback={
                   <div className="flex justify-center items-center min-h-[400px]">
                     <LoadingSpinner />
