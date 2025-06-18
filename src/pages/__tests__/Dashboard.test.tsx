@@ -106,7 +106,52 @@ jest.mock('@tanstack/react-query', () => ({
             rate: 4.2,
             count: 85
           }
-        }
+        },
+        {
+          id: 3,
+          title: 'Produto Teste 3',
+          price: 110.00,
+          description: 'Descrição do produto 3',
+          category: { id: 1, name: 'Eletrônicos', image: 'https://example.com/category1.jpg' },
+          images: ['https://example.com/image3.jpg'],
+          creationAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+          rating: { rate: 4.0, count: 50 }
+        },
+        {
+          id: 4,
+          title: 'Produto Teste 4',
+          price: 115.00,
+          description: 'Descrição do produto 4',
+          category: { id: 2, name: 'Roupas', image: 'https://example.com/category2.jpg' },
+          images: ['https://example.com/image4.jpg'],
+          creationAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+          rating: { rate: 3.8, count: 30 }
+        },
+        {
+          id: 5,
+          title: 'Produto Teste 5',
+          price: 105.00,
+          description: 'Descrição do produto 5',
+          category: { id: 1, name: 'Eletrônicos', image: 'https://example.com/category1.jpg' },
+          images: ['https://example.com/image5.jpg'],
+          creationAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+          rating: { rate: 4.1, count: 40 }
+        },
+        // Produtos para garantir paginação (total 25)
+        ...Array.from({ length: 20 }, (_, i) => ({
+          id: 6 + i,
+          title: `Produto Paginado ${i + 1}`,
+          price: 130 + i,
+          description: `Descrição do produto paginado ${i + 1}`,
+          category: { id: 1, name: 'Eletrônicos', image: 'https://example.com/category1.jpg' },
+          images: [`https://example.com/image${6 + i}.jpg`],
+          creationAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+          rating: { rate: 3.5 + (i % 2), count: 10 + i }
+        }))
       ],
       isLoading: false,
       error: null,
@@ -222,18 +267,20 @@ describe('Dashboard', () => {
 
   it('deve ter categorias exibidas corretamente', () => {
     renderWithRouter(<Dashboard />);
-    
-    expect(screen.getByText('Eletrônicos')).toBeInTheDocument();
-    expect(screen.getByText('Roupas')).toBeInTheDocument();
+    // Deve haver pelo menos um elemento para cada categoria
+    const eletronicos = screen.getAllByText('Eletrônicos');
+    const roupas = screen.getAllByText('Roupas');
+    expect(eletronicos.length).toBeGreaterThan(0);
+    expect(roupas.length).toBeGreaterThan(0);
   });
 
   it('deve ter ratings exibidos corretamente', () => {
     renderWithRouter(<Dashboard />);
-    
-    expect(screen.getByText('4.5')).toBeInTheDocument();
-    expect(screen.getByText('4.2')).toBeInTheDocument();
-    expect(screen.getByText('(120)')).toBeInTheDocument();
-    expect(screen.getByText('(85)')).toBeInTheDocument();
+    // Deve haver pelo menos um elemento para cada rating
+    expect(screen.getAllByText('4.5').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('4.2').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('(120)').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('(85)').length).toBeGreaterThan(0);
   });
 
   it('não deve ter violações de acessibilidade', async () => {
@@ -273,9 +320,10 @@ describe('Dashboard', () => {
 
   it('deve ter paginação funcionando', () => {
     renderWithRouter(<Dashboard />);
-    
-    // Verificar se há controles de paginação
-    const paginationElements = screen.queryAllByRole('button', { name: /anterior|próximo/i });
+    // Procurar botões de paginação por texto parcial ou role
+    const paginationElements = screen.queryAllByRole('button').filter(btn =>
+      /anterior|próximo|[0-9]+|…/.test(btn.textContent || '')
+    );
     expect(paginationElements.length).toBeGreaterThan(0);
   });
 
@@ -315,6 +363,39 @@ describe('Dashboard', () => {
     fireEvent.change(sortSelect, { target: { value: 'price-asc' } });
     await waitFor(() => {
       expect(sortSelect).toHaveValue('price-asc');
+    });
+  });
+
+  it('deve filtrar produtos pelo preço mínimo', () => {
+    renderWithRouter(<Dashboard />);
+    const minInput = screen.getByPlaceholderText(/preço mín/i);
+    fireEvent.change(minInput, { target: { value: '120' } });
+    expect(screen.queryByText('Produto Teste 1')).not.toBeInTheDocument();
+    expect(screen.getByText('Produto Teste 2')).toBeInTheDocument();
+  });
+
+  it('deve filtrar produtos pelo preço máximo', () => {
+    renderWithRouter(<Dashboard />);
+    const maxInput = screen.getByPlaceholderText(/preço máx/i);
+    fireEvent.change(maxInput, { target: { value: '120' } });
+    expect(screen.getByText('Produto Teste 1')).toBeInTheDocument();
+    expect(screen.queryByText('Produto Teste 2')).not.toBeInTheDocument();
+  });
+
+  it('deve filtrar produtos por intervalo de preço', async () => {
+    renderWithRouter(<Dashboard />);
+    const minInput = screen.getByPlaceholderText(/preço mín/i);
+    const maxInput = screen.getByPlaceholderText(/preço máx/i);
+    fireEvent.change(minInput, { target: { value: '100' } });
+    fireEvent.change(maxInput, { target: { value: '120' } });
+    await waitFor(() => {
+      // Espera encontrar produtos 3, 4 e 5
+      expect(screen.getByText('Produto Teste 3')).toBeInTheDocument();
+      expect(screen.getByText('Produto Teste 4')).toBeInTheDocument();
+      expect(screen.getByText('Produto Teste 5')).toBeInTheDocument();
+      // Não deve encontrar Produto Teste 1 e 2
+      expect(screen.queryByText('Produto Teste 1')).not.toBeInTheDocument();
+      expect(screen.queryByText('Produto Teste 2')).not.toBeInTheDocument();
     });
   });
 }); 

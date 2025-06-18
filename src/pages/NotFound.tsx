@@ -34,7 +34,7 @@ const NotFound = () => {
   };
 
   return (
-    <main role="main" className="container w-full px-2 sm:px-4 py-8 sm:py-20 flex flex-col items-center justify-center min-h-[60vh]">
+    <main role="main" className="container w-full px-2 sm:px-4 py-8 sm:py-20 pt-20 flex flex-col items-center justify-center min-h-[60vh]">
       <div className="text-center space-y-4">
         <span role="img" aria-label="erro" className="inline-block mb-2">
           <AlertTriangle className="mx-auto text-red-500" size={48} />

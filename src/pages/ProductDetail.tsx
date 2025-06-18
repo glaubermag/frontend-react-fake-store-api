@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
 import { ArrowLeft, ShoppingCart, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 interface Product {
   id: number;
@@ -28,6 +29,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const [selectedImage, setSelectedImage] = useState<number>(0);
 
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['product', id],
@@ -76,7 +78,7 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="w-full px-2 sm:px-4 py-4 sm:py-8">
+    <div className="w-full px-2 sm:px-4 py-4 sm:py-8 pt-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -102,9 +104,9 @@ const ProductDetail = () => {
               <CardContent className="p-8">
                 <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
                   <img
-                    src={product.images[0] || '/placeholder.svg'}
+                    src={product.images[selectedImage] || '/placeholder.svg'}
                     alt={product.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-all duration-300"
                   />
                 </div>
               </CardContent>
@@ -112,14 +114,20 @@ const ProductDetail = () => {
             
             {product.images.length > 1 && (
               <div className="grid grid-cols-4 gap-2 mt-4">
-                {product.images.slice(1, 5).map((image, index) => (
-                  <div key={index} className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                {product.images.slice(0, 5).map((image, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className={`aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 transition-all ${selectedImage === index ? 'border-blue-600' : 'border-transparent'}`}
+                    onClick={() => setSelectedImage(index)}
+                    aria-label={`Selecionar imagem ${index + 1}`}
+                  >
                     <img
                       src={image}
-                      alt={`${product.title} ${index + 2}`}
+                      alt={`${product.title} ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
-                  </div>
+                  </button>
                 ))}
               </div>
             )}

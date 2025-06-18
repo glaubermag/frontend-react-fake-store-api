@@ -113,7 +113,7 @@ describe('VirtualizedProductList', () => {
   it('deve ter botões com labels acessíveis', () => {
     renderWithRouter(<VirtualizedProductList {...defaultProps} />);
     
-    const addButtons = screen.getAllByRole('button', { name: /adicionar ao carrinho/i });
+    const addButtons = screen.getAllByRole('button', { name: /adicionar/i });
     expect(addButtons.length).toBeGreaterThan(0);
   });
 

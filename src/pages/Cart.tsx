@@ -5,9 +5,46 @@ import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
+import React, { useState } from 'react';
 
 const Cart = () => {
   const { items, removeItem, updateQuantity, clearCart, total, itemCount } = useCart();
+
+  // Estado para CEP e endereço
+  const [cep, setCep] = useState('');
+  const [endereco, setEndereco] = useState<any>(null);
+  const [cepError, setCepError] = useState('');
+  const [loadingCep, setLoadingCep] = useState(false);
+
+  const handleBuscarCep = async () => {
+    setCepError('');
+    setEndereco(null);
+    const cleanCep = cep.replace(/\D/g, '');
+    if (!/^\d{8}$/.test(cleanCep)) {
+      setCepError('CEP inválido. Digite 8 números.');
+      return;
+    }
+    setLoadingCep(true);
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+      if (!res.ok) {
+        setCepError('Erro ao buscar CEP.');
+        setLoadingCep(false);
+        return;
+      }
+      const data = await res.json();
+      if (data.erro) {
+        setCepError('CEP não encontrado.');
+        setLoadingCep(false);
+        return;
+      }
+      setEndereco(data);
+    } catch (e) {
+      setCepError('Erro ao buscar CEP.');
+    } finally {
+      setLoadingCep(false);
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -38,7 +75,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="w-full px-2 sm:px-4 py-4 sm:py-8">
+    <div className="w-full container mx-auto px-2 sm:px-4 py-4 sm:py-8 pt-32 min-h-[calc(100vh-80px)]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -130,10 +167,10 @@ const Cart = () => {
                           </div>
                           <div className="text-right">
                             <div className="text-lg font-bold text-green-600">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price * item.quantity)}
                             </div>
                             <div className="text-sm text-gray-500">
-                              ${item.price.toFixed(2)} cada
+                              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price)} cada
                             </div>
                           </div>
                         </div>
@@ -157,7 +194,7 @@ const Cart = () => {
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
                   <span>Subtotal ({itemCount} itens)</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Frete</span>
@@ -166,7 +203,34 @@ const Cart = () => {
                 <hr />
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span className="text-green-600">${total.toFixed(2)}</span>
+                  <span className="text-green-600">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total)}</span>
+                </div>
+                {/* Campo de CEP e endereço integrado */}
+                <div className="my-4 bg-slate-50 rounded-lg p-3 flex flex-col gap-2 border border-slate-200">
+                  <label htmlFor="cep" className="font-semibold text-slate-700">Calcule seu frete (CEP):</label>
+                  <div className="flex gap-2">
+                    <input
+                      id="cep"
+                      type="text"
+                      value={cep}
+                      onChange={e => setCep(e.target.value.replace(/\D/g, ''))}
+                      maxLength={8}
+                      placeholder="Digite seu CEP"
+                      className="border border-slate-300 rounded px-3 py-2 w-full max-w-[160px] text-sm bg-white focus:ring-2 focus:ring-blue-200"
+                    />
+                    <Button type="button" onClick={handleBuscarCep} disabled={loadingCep || cep.length !== 8}>
+                      {loadingCep ? 'Buscando...' : 'Buscar'}
+                    </Button>
+                  </div>
+                  {cepError && <span className="text-red-600 text-sm">{cepError}</span>}
+                  {endereco && (
+                    <div className="text-sm text-slate-700 mt-2">
+                      <div><b>Logradouro:</b> {endereco.logradouro}</div>
+                      <div><b>Bairro:</b> {endereco.bairro}</div>
+                      <div><b>Cidade:</b> {endereco.localidade} - {endereco.uf}</div>
+                      {endereco.complemento && <div><b>Complemento:</b> {endereco.complemento}</div>}
+                    </div>
+                  )}
                 </div>
                 <Button
                   size="lg"

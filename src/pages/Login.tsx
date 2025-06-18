@@ -50,7 +50,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full px-2 sm:px-4 py-4 sm:py-8 flex flex-col items-center justify-center min-h-[70vh]">
+    <div className="w-full min-h-screen flex items-center justify-center px-2 sm:px-4 py-8 pt-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

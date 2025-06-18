@@ -427,7 +427,7 @@ describe('Register', () => {
   it('deve submeter o formulário com dados válidos', async () => {
     // Mock da resposta da API com delay
     mockAuthContext.register.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)));
-
+    
     renderWithRouter(<Register />);
     const nameInput = screen.getByLabelText(/nome/i);
     const emailInput = screen.getByLabelText(/email/i);
@@ -436,7 +436,7 @@ describe('Register', () => {
     const termsCheckbox = screen.getByRole('checkbox', { name: /aceito os termos/i });
     const privacyCheckbox = screen.getByRole('checkbox', { name: /aceito a política/i });
     const registerButton = screen.getByRole('button', { name: /criar conta/i });
-
+    
     fireEvent.change(nameInput, { target: { value: 'João Silva' } });
     fireEvent.change(emailInput, { target: { value: 'joao@example.com' } });
     fireEvent.change(passwordInput, { target: { value: 'senha123' } });
@@ -444,7 +444,7 @@ describe('Register', () => {
     fireEvent.click(termsCheckbox);
     fireEvent.click(privacyCheckbox);
     fireEvent.click(registerButton);
-
+    
     // O botão deve ficar desabilitado durante o envio
     await waitFor(() => {
       expect(registerButton).toBeDisabled();

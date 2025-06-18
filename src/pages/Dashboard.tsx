@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,11 +44,21 @@ const Dashboard = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingProductId, setDeletingProductId] = useState<number | null>(null);
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortOrder, setSortOrder] = useState('default');
+  const itemsPerPage = 12;
   
   const { addItem } = useCart();
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Resetar página ao mudar filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [minPrice, maxPrice, searchTerm, selectedCategory]);
 
   // Fetch products
   const { data: products, isLoading: productsLoading, error: productsError, refetch: refetchProducts } = useQuery({
@@ -210,8 +220,23 @@ const Dashboard = () => {
     const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.category.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || product.category.id.toString() === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const price = product.price;
+    const min = minPrice ? parseFloat(minPrice.replace(',', '.')) : null;
+    const max = maxPrice ? parseFloat(maxPrice.replace(',', '.')) : null;
+    const matchesMin = min === null || price >= min;
+    const matchesMax = max === null || price <= max;
+    return matchesSearch && matchesCategory && matchesMin && matchesMax;
   }) || [];
+
+  // ORDENAR PRODUTOS
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortOrder === 'price-asc') return a.price - b.price;
+    if (sortOrder === 'price-desc') return b.price - a.price;
+    return 0;
+  });
+
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const paginatedProducts = sortedProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handleAddToCart = (product: Product) => {
     addItem({
@@ -266,7 +291,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="w-full px-2 sm:px-4 py-4 sm:py-8 container mx-auto" role="main">
+    <div className="w-full px-2 sm:px-4 py-4 sm:py-8 pt-20 lg:pt-24 min-h-[calc(100vh-80px)] container mx-auto" role="main">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -301,7 +326,7 @@ const Dashboard = () => {
             )}
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 max-w-2xl">
+          <div className="flex flex-col sm:flex-row gap-4 w-full mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               <Input
@@ -326,8 +351,33 @@ const Dashboard = () => {
               </SelectContent>
             </Select>
 
+            {/* Filtro de preço */}
+            <div className="flex gap-2 items-center w-full sm:w-auto">
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="Preço mín."
+                value={minPrice}
+                onChange={e => setMinPrice(e.target.value)}
+                className="border rounded px-2 py-1 w-24 text-sm"
+                aria-label="Preço mínimo"
+              />
+              <span className="text-gray-400">-</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="Preço máx."
+                value={maxPrice}
+                onChange={e => setMaxPrice(e.target.value)}
+                className="border rounded px-2 py-1 w-24 text-sm"
+                aria-label="Preço máximo"
+              />
+            </div>
+
             {/* Select de ordenação */}
-            <Select value={"default"} onValueChange={() => {}}>
+            <Select value={sortOrder} onValueChange={setSortOrder}>
               <SelectTrigger className="w-full sm:w-48" aria-label="Ordenar por">
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
@@ -354,8 +404,8 @@ const Dashboard = () => {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map((product, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+            {paginatedProducts.map((product, index) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -394,15 +444,15 @@ const Dashboard = () => {
                           <span className="text-gray-500">({product.rating.count})</span>
                         </div>
                       )}
-                      <div className="flex gap-2">
-                        <Button asChild variant="outline" className="flex-1">
+                      <div className="flex flex-col sm:flex-row gap-2 w-full">
+                        <Button asChild variant="outline" className="w-full sm:flex-1 min-w-0">
                           <Link to={`/products/${product.id}`}>
                             Ver Detalhes
                           </Link>
                         </Button>
                         <Button
                           onClick={() => handleAddToCart(product)}
-                          className="bg-blue-600 hover:bg-blue-700"
+                          className="w-full sm:flex-1 min-w-0 bg-blue-600 hover:bg-blue-700"
                           aria-label="Adicionar ao carrinho"
                         >
                           <ShoppingCart className="h-4 w-4 mr-2" />
@@ -486,11 +536,46 @@ const Dashboard = () => {
           </AlertDialogContent>
         </AlertDialog>
 
-        {/* Paginação fictícia para testes */}
-        <div className="flex justify-center mt-8 gap-2">
-          <Button variant="outline" aria-label="Anterior">Anterior</Button>
-          <Button variant="outline" aria-label="Próximo">Próximo</Button>
-        </div>
+        {/* Paginação real */}
+        {totalPages > 1 && (
+          <div className="flex flex-wrap justify-center mt-8 gap-2 items-center">
+            <Button
+              variant="outline"
+              aria-label="Anterior"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >Anterior</Button>
+            {/* Botões numerados */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(pageNum =>
+                pageNum === 1 ||
+                pageNum === totalPages ||
+                (pageNum >= currentPage - 2 && pageNum <= currentPage + 2)
+              )
+              .map((pageNum, idx, arr) => (
+                <span key={pageNum} className="flex">
+                  {/* Ellipsis para páginas distantes */}
+                  {idx > 0 && pageNum - arr[idx - 1] > 1 && (
+                    <span className="px-1 text-gray-400">...</span>
+                  )}
+                  <Button
+                    variant={pageNum === currentPage ? "default" : "outline"}
+                    className={`w-10 h-10 p-0 rounded-full font-bold ${pageNum === currentPage ? 'bg-blue-600 text-white' : ''}`}
+                    onClick={() => setCurrentPage(pageNum)}
+                    aria-current={pageNum === currentPage ? 'page' : undefined}
+                  >
+                    {pageNum}
+                  </Button>
+                </span>
+              ))}
+            <Button
+              variant="outline"
+              aria-label="Próximo"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >Próximo</Button>
+          </div>
+        )}
       </motion.div>
     </div>
   );

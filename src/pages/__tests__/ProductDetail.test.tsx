@@ -336,4 +336,30 @@ describe('ProductDetail', () => {
     const interactiveElements = screen.getAllByRole('button');
     expect(interactiveElements.length).toBeGreaterThan(0);
   });
+
+  it('deve trocar a imagem principal ao clicar nas miniaturas', async () => {
+    renderWithRouter(<ProductDetail />);
+    // A imagem principal deve ser a primeira inicialmente
+    const mainImg = screen.getAllByRole('img')[0];
+    expect(mainImg).toHaveAttribute('src', 'https://example.com/image1.jpg');
+
+    // Clicar na segunda miniatura
+    const miniaturas = screen.getAllByRole('button', { name: /selecionar imagem/i });
+    fireEvent.click(miniaturas[1]);
+    // Agora a imagem principal deve ser a segunda
+    expect(screen.getAllByRole('img')[0]).toHaveAttribute('src', 'https://example.com/image2.jpg');
+
+    // Clicar na terceira miniatura
+    fireEvent.click(miniaturas[2]);
+    expect(screen.getAllByRole('img')[0]).toHaveAttribute('src', 'https://example.com/image3.jpg');
+  });
+
+  it('deve garantir que o título e a imagem principal estejam presentes', () => {
+    renderWithRouter(<ProductDetail />);
+    // Título
+    expect(screen.getByText('Produto Detalhado')).toBeInTheDocument();
+    // Imagem principal
+    const mainImg = screen.getAllByRole('img')[0];
+    expect(mainImg).toHaveAttribute('src', 'https://example.com/image1.jpg');
+  });
 }); 

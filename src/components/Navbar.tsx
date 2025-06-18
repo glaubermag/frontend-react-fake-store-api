@@ -24,7 +24,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm mb-4">
       <div className="w-full px-2 sm:px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
@@ -99,9 +99,6 @@ const Navbar = () => {
             <nav className="flex flex-col gap-2 p-4">
               <Button asChild variant="ghost" className="justify-start w-full">
                 <Link to="/products" onClick={() => handleMobileLinkClick('/products')}>Produtos</Link>
-              </Button>
-              <Button asChild variant="ghost" className="justify-start w-full">
-                <Link to="/test" onClick={() => handleMobileLinkClick('/test')}>Teste</Link>
               </Button>
               <Button asChild variant="ghost" className="justify-start w-full">
                 <Link to="/cart" onClick={() => handleMobileLinkClick('/cart')}>

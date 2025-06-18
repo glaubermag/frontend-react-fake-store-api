@@ -108,10 +108,10 @@ describe('Cart', () => {
 
     it('deve calcular e exibir o total corretamente', () => {
       renderWithRouter(<Cart />);
-      
       expect(screen.getByText(/subtotal/i)).toBeInTheDocument();
-      const totals = screen.getAllByText(/\$349\.97/);
-      expect(totals.length).toBeGreaterThan(0);
+      // Procurar pelo total no padrão brasileiro
+      const totalBRL = screen.getAllByText((content) => /R\$\s?349,97/.test(content));
+      expect(totalBRL.length).toBeGreaterThan(0);
     });
 
     it('deve permitir atualizar quantidade de itens', () => {
@@ -200,15 +200,6 @@ describe('Cart', () => {
       expect(buttons.length).toBeGreaterThan(0);
     });
 
-    it('deve exibir preços formatados corretamente', () => {
-      renderWithRouter(<Cart />);
-      
-      const prices199 = screen.getAllByText(/\$199\.98/);
-      const prices149 = screen.getAllByText(/\$149\.99/);
-      expect(prices199.length).toBeGreaterThan(0);
-      expect(prices149.length).toBeGreaterThan(0);
-    });
-
     it('deve mostrar quantidade de itens corretamente', () => {
       renderWithRouter(<Cart />);
       
@@ -234,6 +225,15 @@ describe('Cart', () => {
       
       expect(title).toBeInTheDocument();
       expect(totalTexts.length).toBeGreaterThan(0);
+    });
+
+    it('deve exibir o preço no padrão brasileiro (R$ 0,00)', () => {
+      renderWithRouter(<Cart />);
+      // O preço deve ser exibido como R$ 99,99, R$ 149,99, etc.
+      expect(screen.getAllByText((content) => /R\$\s?99,99/.test(content)).length).toBeGreaterThan(0);
+      expect(screen.getAllByText((content) => /R\$\s?149,99/.test(content)).length).toBeGreaterThan(0);
+      expect(screen.getAllByText((content) => /R\$\s?199,98/.test(content)).length).toBeGreaterThan(0); // 99,99 * 2
+      expect(screen.getAllByText((content) => /R\$\s?349,97/.test(content)).length).toBeGreaterThan(0); // total
     });
   });
 }); 

@@ -30,7 +30,8 @@ const mockProduct = {
   },
   images: ['https://example.com/product.jpg'],
   creationAt: '2024-01-01T00:00:00.000Z',
-  updatedAt: '2024-01-01T00:00:00.000Z'
+  updatedAt: '2024-01-01T00:00:00.000Z',
+  rating: { rate: 4.5, count: 120 },
 };
 
 const renderWithRouter = (component: React.ReactElement) => {
@@ -52,7 +53,7 @@ describe('ProductCard', () => {
     expect(screen.getByText('Produto Teste')).toBeInTheDocument();
     expect(screen.getByText('Eletrônicos')).toBeInTheDocument();
     expect(screen.getByText('R$ 99,99')).toBeInTheDocument();
-    expect(screen.getByText('Adicionar ao Carrinho')).toBeInTheDocument();
+    expect(screen.getByText('Adicionar')).toBeInTheDocument();
     expect(screen.getByText('Ver Detalhes')).toBeInTheDocument();
   });
 
@@ -81,7 +82,7 @@ describe('ProductCard', () => {
   it('deve adicionar produto ao carrinho quando clicar no botão', () => {
     renderWithRouter(<ProductCard product={mockProduct} />);
     
-    const addButton = screen.getByText('Adicionar ao Carrinho');
+    const addButton = screen.getByText('Adicionar');
     fireEvent.click(addButton);
     
     expect(mockAddItem).toHaveBeenCalledWith({

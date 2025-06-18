@@ -108,43 +108,44 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
         </p>
       </CardContent>
       
-      <CardFooter className="p-4 pt-0 space-y-3">
-        <div className="flex items-center justify-between w-full">
-          {product.rating && (
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="text-sm font-medium">{product.rating.rate}</span>
-              <span className="text-sm text-gray-500">({product.rating.count})</span>
-            </div>
-          )}
+      <CardFooter className="p-4 pt-0 flex flex-col gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-2">
+          <div className="flex items-center gap-1">
+            {product.rating && (
+              <>
+                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                <span className="text-sm font-medium">{product.rating.rate}</span>
+                <span className="text-sm text-gray-500">({product.rating.count})</span>
+              </>
+            )}
+          </div>
           <span className="text-xl font-bold text-green-600">
             {formattedPrice}
           </span>
         </div>
-        
-        <Button
-          onClick={handleAddToCart}
-          disabled={isInCart}
-          className="flex-1 ml-2"
-          variant={isInCart ? "secondary" : "default"}
-        >
-          <ShoppingCart className="h-4 w-4 mr-2" />
-          {isInCart ? 'Adicionado' : 'Adicionar ao Carrinho'}
-        </Button>
-        
-        <Link 
-          to={`/products/${product.id}`}
-          className="w-full"
-        >
-          <Button variant="outline" className="w-full">
-            Ver Detalhes
+        <div className="flex flex-col sm:flex-row gap-2 w-full">
+          <Button
+            onClick={handleAddToCart}
+            disabled={isInCart}
+            className="w-full sm:w-auto text-sm px-2 py-2 whitespace-nowrap flex items-center justify-center"
+            variant={isInCart ? "secondary" : "default"}
+          >
+            <ShoppingCart className="h-4 w-4 mr-0 sm:mr-2" />
+            <span className="hidden sm:inline">{isInCart ? 'Adicionado' : 'Adicionar'}</span>
           </Button>
-        </Link>
+          <Link 
+            to={`/products/${product.id}`}
+            className="w-full sm:w-auto"
+            tabIndex={-1}
+          >
+            <Button variant="outline" className="w-full sm:w-auto text-sm px-2 py-2 whitespace-nowrap truncate">
+              Ver Detalhes
+            </Button>
+          </Link>
+        </div>
       </CardFooter>
     </Card>
   );
 });
 
-ProductCard.displayName = 'ProductCard';
-
-export default ProductCard; 
+export default ProductCard;

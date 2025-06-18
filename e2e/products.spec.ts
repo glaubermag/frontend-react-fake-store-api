@@ -36,4 +36,27 @@ test.describe('Produtos', () => {
       }
     }
   });
+
+  test('deve navegar para detalhes ao clicar no título e na imagem do produto', async ({ page }) => {
+    await page.goto('http://localhost:8080/products');
+    await page.waitForLoadState('networkidle');
+    // Espera pelo menos um produto
+    const productCards = page.locator('[data-testid="product-card"], .card, .grid > div');
+    await expect(productCards.first()).toBeVisible();
+
+    // Clicar no título
+    const titleLink = productCards.first().locator('a:has(h3), a');
+    const titleHref = await titleLink.getAttribute('href');
+    await titleLink.first().click();
+    await page.waitForLoadState('networkidle');
+    await expect(page).toHaveURL(new RegExp('/products/\\d+$'));
+    // Voltar para a lista
+    await page.goto('http://localhost:8080/products');
+    await page.waitForLoadState('networkidle');
+    // Clicar na imagem
+    const imageLink = productCards.first().locator('a:has(img), a');
+    await imageLink.first().click();
+    await page.waitForLoadState('networkidle');
+    await expect(page).toHaveURL(new RegExp('/products/\\d+$'));
+  });
 }); 
