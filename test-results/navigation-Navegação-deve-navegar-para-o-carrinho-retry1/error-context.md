@@ -1,0 +1,48 @@
+# Page snapshot
+
+```yaml
+- region "Notifications (F8)":
+  - list
+- navigation:
+  - link "Product Store":
+    - /url: /
+    - img
+    - text: Product Store
+  - link "Produtos":
+    - /url: /products
+  - link:
+    - /url: /cart
+    - img
+  - link "Login":
+    - /url: /login
+  - link "Registrar":
+    - /url: /register
+- heading "Fake Store API" [level=1]
+- paragraph: Sua loja online completa com os melhores produtos, preços imbatíveis e experiência de compra excepcional.
+- link "Explorar Produtos":
+  - /url: /products
+  - text: Explorar Produtos
+  - img
+- link "Fazer Login":
+  - /url: /login
+- heading "Por que escolher nossa loja?" [level=2]
+- paragraph: Oferecemos a melhor experiência de compra online com qualidade garantida
+- img
+- heading "Catálogo Completo" [level=3]
+- paragraph: Explore nossa ampla seleção de produtos de qualidade
+- img
+- heading "Avaliações Verificadas" [level=3]
+- paragraph: Reviews reais de clientes satisfeitos
+- img
+- heading "Entrega Rápida" [level=3]
+- paragraph: Receba seus produtos com agilidade e segurança
+- img
+- heading "Suporte 24/7" [level=3]
+- paragraph: Nossa equipe está sempre pronta para ajudar
+- heading "Pronto para começar suas compras?" [level=3]
+- paragraph: Junte-se a milhares de clientes satisfeitos
+- link "Ver Produtos":
+  - /url: /products
+  - text: Ver Produtos
+  - img
+```

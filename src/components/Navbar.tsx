@@ -3,18 +3,21 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
-import { ShoppingCart, User, LogOut, Store } from 'lucide-react';
+import { ShoppingCart, User, LogOut, Store, Menu } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useState } from 'react';
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const { itemCount } = useCart();
   const location = useLocation();
+  const [open, setOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
@@ -27,7 +30,8 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <div className="flex items-center space-x-4">
+          {/* Menu Desktop */}
+          <div className="hidden md:flex items-center space-x-4">
             <Button asChild variant="ghost" className={location.pathname === '/products' ? 'bg-blue-50 text-blue-600' : ''}>
               <Link to="/products">Produtos</Link>
             </Button>
@@ -70,6 +74,54 @@ const Navbar = () => {
                 </Button>
               </div>
             )}
+          </div>
+
+          {/* Menu Mobile */}
+          <div className="md:hidden flex items-center">
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="Abrir menu">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-0 w-64">
+                <nav className="flex flex-col gap-2 p-6">
+                  <Button asChild variant="ghost" className="justify-start w-full" onClick={() => setOpen(false)}>
+                    <Link to="/products">Produtos</Link>
+                  </Button>
+                  <Button asChild variant="ghost" className="justify-start w-full" onClick={() => setOpen(false)}>
+                    <Link to="/cart">
+                      <span className="flex items-center gap-2">
+                        <ShoppingCart className="h-5 w-5" />
+                        Carrinho
+                        {itemCount > 0 && (
+                          <Badge className="ml-2 h-5 w-5 flex items-center justify-center p-0 bg-red-500 text-white text-xs">
+                            {itemCount}
+                          </Badge>
+                        )}
+                      </span>
+                    </Link>
+                  </Button>
+                  {isAuthenticated ? (
+                    <Button variant="ghost" className="justify-start w-full" onClick={() => { logout(); setOpen(false); }}>
+                      <span className="flex items-center gap-2">
+                        <LogOut className="h-4 w-4" />
+                        Sair
+                      </span>
+                    </Button>
+                  ) : (
+                    <>
+                      <Button asChild variant="outline" className="justify-start w-full mb-2" onClick={() => setOpen(false)}>
+                        <Link to="/login">Login</Link>
+                      </Button>
+                      <Button asChild className="justify-start w-full" onClick={() => setOpen(false)}>
+                        <Link to="/register">Registrar</Link>
+                      </Button>
+                    </>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>
