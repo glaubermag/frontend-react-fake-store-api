@@ -75,13 +75,13 @@ const Cart = () => {
   }
 
   return (
-    <div className="w-full container mx-auto px-2 sm:px-4 py-4 sm:py-8 pt-40 min-h-[calc(100vh-80px)]">
+    <div className="w-full container mx-auto px-2 sm:px-4 py-4 sm:py-8 min-h-[calc(100vh-80px)]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 mt-8">
           <div className="flex items-center gap-4">
             <Button asChild variant="ghost">
               <Link to="/products">
