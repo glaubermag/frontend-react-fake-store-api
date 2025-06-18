@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -107,7 +106,7 @@ const ProductForm = ({ product, onSubmit, onCancel, isLoading }: ProductFormProp
           <div className="space-y-2">
             <Label htmlFor="category">Categoria</Label>
             <Select value={formData.categoryId.toString()} onValueChange={(value) => handleInputChange('categoryId', value)}>
-              <SelectTrigger>
+              <SelectTrigger aria-label="Selecione uma categoria">
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>

@@ -340,3 +340,116 @@ const { observe, unobserve } = useIntersectionObserver((entries) => {
 
 // use observe(ref.current) para observar um elemento
 ```
+
+## ♿ Acessibilidade
+
+O projeto implementa as seguintes melhorias de acessibilidade:
+
+### Testes de Acessibilidade
+- **Jest-Axe**: Testes automatizados para verificar violações de acessibilidade
+- **Cobertura Completa**: Testes para todos os componentes principais
+- **Validação Contínua**: Verificação automática em cada build
+
+### Melhorias Implementadas
+- **Labels Acessíveis**: Todos os campos de formulário têm labels apropriados
+- **Navegação por Teclado**: Suporte completo à navegação via Tab
+- **ARIA Labels**: Atributos ARIA para elementos interativos
+- **Contraste**: Cores com contraste adequado
+- **Estrutura Semântica**: HTML semântico correto
+- **Ícones**: Ícones com aria-hidden ou aria-label apropriados
+
+### Componentes Testados
+- ✅ **ProductCard**: Links acessíveis, imagens com alt text
+- ✅ **Navbar**: Links com aria-label, navegação por teclado
+- ✅ **ProductForm**: Labels acessíveis, campos obrigatórios marcados
+- ✅ **PWAInstallPrompt**: Estrutura semântica, botões acessíveis
+
+### Padrões Seguidos
+- **WCAG 2.1**: Conformidade com as diretrizes de acessibilidade
+- **Section 508**: Padrões de acessibilidade para tecnologia da informação
+- **React A11y**: Boas práticas específicas para React
+
+## �� Testes
+
+### Testes de Acessibilidade
+```bash
+npm test -- --testPathPattern="ProductCard|Navbar|ProductForm|PWAInstallPrompt"
+```
+
+### Testes E2E
+```bash
+npm run test:e2e
+```
+
+## 🚀 Como Executar
+
+1. **Clone o repositório**
+```bash
+git clone <url-do-repositorio>
+cd frontend-react-fake-store-api
+```
+
+2. **Instale as dependências**
+```bash
+npm install
+```
+
+3. **Execute em modo de desenvolvimento**
+```bash
+npm run dev
+```
+
+4. **Acesse no navegador**
+```
+http://localhost:5173
+```
+
+## 📦 Build para Produção
+
+```bash
+npm run build
+```
+
+## 🔧 Scripts Disponíveis
+
+- `npm run dev` - Executa em modo de desenvolvimento
+- `npm run build` - Gera build de produção
+- `npm run preview` - Visualiza o build de produção
+- `npm test` - Executa testes unitários
+- `npm run test:e2e` - Executa testes E2E
+- `npm run test:coverage` - Executa testes com cobertura
+- `npm run lint` - Executa o linter
+- `npm run lint:fix` - Corrige problemas do linter
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── components/          # Componentes React
+│   ├── ui/             # Componentes de UI reutilizáveis
+│   └── __tests__/      # Testes dos componentes
+├── contexts/           # Contextos React
+├── hooks/              # Hooks customizados
+├── pages/              # Páginas da aplicação
+├── lib/                # Utilitários e configurações
+└── main.tsx           # Ponto de entrada
+```
+
+## 🤝 Contribuição
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## 🙏 Agradecimentos
+
+- [Fake Store API](https://fakestoreapi.com/) - API para dados de produtos
+- [Shadcn/ui](https://ui.shadcn.com/) - Componentes de UI
+- [Lucide Icons](https://lucide.dev/) - Ícones
+- [Tailwind CSS](https://tailwindcss.com/) - Framework CSS
