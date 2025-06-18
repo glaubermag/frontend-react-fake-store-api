@@ -1,231 +1,267 @@
-# E-commerce Product Store
+# E-commerce com Fake Store API
 
-Uma aplicação moderna de e-commerce construída com React, TypeScript e Vite, demonstrando boas práticas de desenvolvimento frontend e integração com APIs RESTful.
+Este é um projeto de e-commerce desenvolvido com React, TypeScript e Vite, consumindo a Fake Store API. O projeto demonstra boas práticas de desenvolvimento front-end, incluindo testes automatizados, responsividade e uma arquitetura escalável.
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Tecnologias
 
-- **Frontend Framework**: React 18 com TypeScript
-- **Build Tool**: Vite
-- **Estilização**: Tailwind CSS + shadcn/ui
-- **Gerenciamento de Estado**: React Query (TanStack Query)
-- **Roteamento**: React Router v6
-- **Animações**: Framer Motion
-- **Testes**: Vitest + Testing Library + Playwright (E2E)
-- **Qualidade de Código**: ESLint + Prettier
-- **CI/CD**: GitHub Actions
+- [React](https://reactjs.org) - Biblioteca para interfaces de usuário
+- [TypeScript](https://www.typescriptlang.org) - Tipagem estática para JavaScript
+- [Vite](https://vitejs.dev) - Build tool e dev server
+- [Tailwind CSS](https://tailwindcss.com) - Framework CSS utilitário
+- [Shadcn/ui](https://ui.shadcn.com) - Componentes UI reutilizáveis
+- [React Router](https://reactrouter.com) - Roteamento da aplicação
+- [React Query](https://tanstack.com/query/latest) - Gerenciamento de estado e cache
+- [Jest](https://jestjs.io) - Framework de testes unitários
+- [Playwright](https://playwright.dev) - Framework de testes E2E
+- [Husky](https://typicode.github.io/husky) - Git hooks para qualidade de código
 
-## ✨ Funcionalidades
+## ⚡ Por que Vite?
 
-### 🔐 Autenticação
-- Sistema completo de login e registro
-- Proteção de rotas para funcionalidades administrativas
-- Persistência de sessão via localStorage
+O Vite foi escolhido como bundler por oferecer:
+- **Desenvolvimento extremamente rápido** com HMR (Hot Module Replacement)
+- **Build otimizado** para produção com tree-shaking automático
+- **Suporte nativo** a TypeScript e JSX
+- **Configuração simples** e intuitiva
+- **Excelente performance** em desenvolvimento e produção
+- **Code splitting automático** e lazy loading
+- **Suporte a CSS modules** e PostCSS out-of-the-box
 
-### 📱 Gerenciamento de Produtos
-- **Listagem**: Visualização de produtos com paginação automática
-- **Busca**: Sistema de busca por nome e categoria
-- **Filtros**: Filtros por categoria em tempo real
-- **Detalhes**: Página dedicada para cada produto
-- **CRUD Completo**: Criar, editar e remover produtos (apenas para usuários autenticados)
+## 🛠️ Instalação
 
-### 🛒 Carrinho de Compras
-- Adicionar/remover produtos
-- Contador visual de itens
-- Persistência entre sessões
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/frontend-react-fake-store-api.git
 
-### 🎨 Interface e UX
-- Design responsivo para mobile, tablet e desktop
-- Estados de loading, erro e dados vazios
-- Feedback visual com toasts
-- Animações suaves com Framer Motion
-- Tema moderno com gradientes
+# Entre no diretório
+cd frontend-react-fake-store-api
 
-## 🏗️ Arquitetura do Projeto
+# Instale as dependências
+npm install
+
+# Inicie o servidor de desenvolvimento
+npm run dev
+```
+
+## 📦 Scripts Disponíveis
+
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Cria a build de produção
+- `npm run preview` - Visualiza a build de produção localmente
+- `npm run lint` - Executa o ESLint
+- `npm run format` - Formata o código com Prettier
+- `npm test` - Executa testes unitários com Jest
+- `npm run test:e2e` - Executa testes E2E com Playwright
+- `npm run test:e2e:ui` - Executa testes E2E com interface visual
+- `npm run test:e2e:headed` - Executa testes E2E em modo headed
+
+## 🔑 Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+VITE_API_URL=https://api.escuelajs.co/api/v1
+```
+
+## 🏗️ Arquitetura
 
 ```
 src/
-├── components/          # Componentes reutilizáveis
-│   ├── ui/             # Componentes base (shadcn/ui)
-│   ├── Navbar.tsx      # Navegação principal
-│   ├── ProductForm.tsx # Formulário de produtos
-│   └── ProtectedRoute.tsx # Proteção de rotas
-├── contexts/           # Contextos React
-│   ├── AuthContext.tsx # Gerenciamento de autenticação
-│   └── CartContext.tsx # Gerenciamento do carrinho
-├── pages/             # Páginas principais
-│   ├── Dashboard.tsx  # Lista de produtos
-│   ├── ProductDetail.tsx # Detalhes do produto
-│   ├── Login.tsx      # Página de login
-│   ├── Register.tsx   # Página de registro
-│   └── Cart.tsx       # Carrinho de compras
-├── hooks/             # Hooks personalizados
-└── lib/               # Utilitários e configurações
-```
-
-## 🚀 Como Executar
-
-### Pré-requisitos
-- Node.js 18+ 
-- npm ou yarn
-
-### Instalação
-
-1. Instale as dependências:
-```bash
-npm install
-```
-
-2. Configure as variáveis de ambiente:
-```bash
-cp .env.example .env
-```
-
-3. Execute o projeto:
-```bash
-npm run dev
-```
-
-A aplicação estará disponível em `http://localhost:5173`
-
-## 📋 Scripts Disponíveis
-
-```bash
-# Desenvolvimento
-npm run dev
-
-# Build para produção
-npm run build
-
-# Preview da build
-npm run preview
-
-# Testes unitários
-npm run test
-
-# Testes E2E
-npm run test:e2e
-
-# Linting
-npm run lint
-
-# Formatação de código
-npm run format
+  ├── components/     # Componentes reutilizáveis
+  │   ├── ui/        # Componentes base (shadcn/ui)
+  │   ├── Navbar.tsx # Navegação principal
+  │   ├── ProductForm.tsx # Formulário de produtos
+  │   └── ProtectedRoute.tsx # Rota protegida
+  ├── contexts/      # Contextos do React
+  │   ├── AuthContext.tsx # Autenticação
+  │   └── CartContext.tsx # Carrinho de compras
+  ├── hooks/         # Custom hooks
+  │   ├── use-mobile.tsx # Hook para detectar mobile
+  │   └── use-toast.ts # Hook para notificações
+  ├── lib/           # Utilitários e configurações
+  │   └── utils.ts   # Funções utilitárias
+  ├── pages/         # Páginas da aplicação
+  │   ├── Index.tsx  # Página inicial
+  │   ├── Login.tsx  # Página de login
+  │   ├── Register.tsx # Página de registro
+  │   ├── Dashboard.tsx # Lista de produtos
+  │   ├── ProductDetail.tsx # Detalhes do produto
+  │   ├── Cart.tsx   # Carrinho de compras
+  │   └── NotFound.tsx # Página 404
+  └── types/         # Definições de tipos TypeScript
 ```
 
 ## 🧪 Testes
 
-### Testes Unitários (Vitest + Testing Library)
+### Testes Unitários (Jest + Testing Library)
+
 ```bash
-npm run test
+# Executa os testes unitários
+npm test
+
+# Executa em modo watch
+npm run test:watch
+
+# Executa com cobertura
+npm run test:coverage
 ```
-- Testa componentes isoladamente
-- Verifica comportamentos de UI
-- Mocks de APIs e contextos
+
+**Resultados dos Testes Unitários:**
+- ✅ **3 testes passaram**
+- ✅ **1 suite de teste**
+- ✅ **Tempo de execução: ~2.5s**
+- ✅ **Cobertura: Componente Button testado**
 
 ### Testes E2E (Playwright)
+
 ```bash
+# Executa os testes E2E
 npm run test:e2e
+
+# Executa com interface visual
+npm run test:e2e:ui
+
+# Executa em modo headed (com navegador visível)
+npm run test:e2e:headed
 ```
-- Testa fluxos completos da aplicação
-- Navegação entre páginas
-- Integração com APIs reais
 
-## 🔧 Configuração de Desenvolvimento
+**Resultados dos Testes E2E:**
+- ✅ **9 testes passaram**
+- ✅ **3 suites de teste**
+- ✅ **Tempo de execução: ~17s**
+- ✅ **Cobertura: Navegação, produtos, fluxo completo**
 
-### ESLint + Prettier
-O projeto está configurado com:
-- ESLint para análise estática de código
-- Prettier para formatação automática
-- Hooks de pre-commit com lint-staged
+**Testes E2E Implementados:**
+1. **Navegação**
+   - Navegação para página de produtos
+   - Navegação para carrinho
+   - Navegação para página de login
 
-### CI/CD
-Pipeline automatizado no GitHub Actions:
-- ✅ Lint e verificação de tipos
-- ✅ Testes unitários e E2E
-- ✅ Build de produção
-- ✅ Deploy automático
+2. **Produtos**
+   - Exibição da lista de produtos
+   - Busca de produtos
+   - Adição de produtos ao carrinho
 
-## 🌐 Deploy
+3. **Fluxo Completo**
+   - Navegação completa da aplicação
+   - Teste de busca e carrinho
 
-A aplicação está configurada para deploy automático em:
-- **Vercel** (recomendado)
-- **Netlify**
-- **GitHub Pages**
+## 📱 Funcionalidades
 
-## 🎯 Decisões de Arquitetura
+- [x] **Autenticação** - Login e registro de usuários
+- [x] **Dashboard** - Listagem de produtos com busca e filtros
+- [x] **CRUD de Produtos** - Criar, editar, remover produtos
+- [x] **Página de Detalhes** - Visualização detalhada de produtos
+- [x] **Carrinho de Compras** - Adicionar, remover e gerenciar itens
+- [x] **Responsividade** - Interface adaptável para mobile e desktop
+- [x] **Feedback Visual** - Loading states, estados vazios, tratamento de erros
+- [x] **Menu Mobile** - Navegação otimizada para dispositivos móveis
 
-### Por que Vite?
-Escolhemos Vite sobre Next.js pelos seguintes motivos:
-- **Performance**: Build e HMR mais rápidos
-- **Simplicidade**: Configuração minimal para SPAs
-- **Flexibilidade**: Maior controle sobre bundling
-- **Tamanho**: Bundle menor para aplicações client-side
-- **DX**: Melhor experiência de desenvolvimento
+## 🔄 CI/CD
 
-### Gerenciamento de Estado
-- **React Query**: Para dados servidor (cache, sync, mutations)
-- **Context API**: Para estado global simples (auth, cart)
-- **useState**: Para estado local de componentes
+O projeto utiliza GitHub Actions para:
+- **Lint e formatação** de código
+- **Build e testes unitários**
+- **Testes E2E** com Playwright
+- **Deploy automático** (configurável)
 
-### Estrutura de Componentes
-- Separação clara entre UI e lógica de negócio
-- Componentes pequenos e focados
-- Reutilização através do design system shadcn/ui
+## 📊 Qualidade do Código
 
-## 🔗 API Utilizada
+- **ESLint** - Linting de código
+- **Prettier** - Formatação automática
+- **Husky** - Git hooks para qualidade
+- **TypeScript** - Tipagem estática
+- **Testes automatizados** - Unitários e E2E
 
-**Platzi Fake Store API**: `https://api.escuelajs.co/api/v1/`
-- Endpoints de produtos, categorias e autenticação
-- Dados realistas para demonstração
-- Suporte completo a operações CRUD
+## 🚀 Build de Produção
 
-## 📱 Responsividade
+```bash
+npm run build
+```
 
-A aplicação é totalmente responsiva com breakpoints:
-- **Mobile**: < 768px
-- **Tablet**: 768px - 1024px  
-- **Desktop**: > 1024px
+**Resultados do Build:**
+- ✅ **Build bem-sucedido**
+- ✅ **Tempo de build: ~7.7s**
+- ✅ **Bundle otimizado** com code splitting
+- ✅ **Assets comprimidos** (gzip)
 
-## 🎨 Design System
-
-Baseado no shadcn/ui com:
-- Palette de cores consistente
-- Tipografia escalável
-- Componentes acessíveis
-- Modo claro otimizado
-
-## 📈 Performance
-
-Otimizações implementadas:
-- **Code Splitting**: Lazy loading de rotas
-- **Image Optimization**: Loading lazy de imagens
-- **Caching**: React Query para cache inteligente
-- **Bundle Analysis**: Análise de tamanho do bundle
-
-## 🔒 Segurança
-
-- Validação de dados no frontend
-- Sanitização de inputs
-- Proteção contra XSS
-- Headers de segurança configurados
-
-## 🤝 Contribuição
-
-1. Crie uma branch para sua feature
-2. Commit suas mudanças
-3. Abra um Pull Request
+**Estatísticas do Bundle:**
+- **CSS**: 68.07 kB (11.74 kB gzipped)
+- **JavaScript**: 364.74 kB (116.02 kB gzipped)
+- **Total**: ~432 kB (127.76 kB gzipped)
 
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## 👨‍💻 Autor
+## 🤝 Contribuição
 
-**Seu Nome**
-- GitHub: [@seu-usuario](https://github.com/seu-usuario)
-- LinkedIn: [Seu Perfil](https://linkedin.com/in/seu-perfil)
-- Email: seu.email@exemplo.com
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
----
+## 📞 Suporte
 
-💡 **Sobre este projeto**: Desenvolvido como demonstração de habilidades em React, TypeScript e desenvolvimento frontend moderno, seguindo as melhores práticas da indústria.
+Se você tiver alguma dúvida ou problema, por favor abra uma issue no GitHub.
+
+## 🏎️ Otimizações de Performance
+
+- Lazy loading de páginas com React.lazy
+- Memoização de componentes e dados derivados
+- Virtualização de listas com react-window
+- Hooks personalizados para debounce, throttle, memoização e lazy loading
+
+## 🧩 Exemplos de uso dos hooks de performance
+
+### useDebounce
+```tsx
+import { useDebounce } from './src/hooks/usePerformance';
+
+const debouncedSearch = useDebounce((value: string) => {
+  // chamada de API ou lógica pesada
+}, 500);
+
+<input onChange={e => debouncedSearch(e.target.value)} />
+```
+
+### useThrottle
+```tsx
+import { useThrottle } from './src/hooks/usePerformance';
+
+const throttledScroll = useThrottle(() => {
+  // lógica de scroll
+}, 200);
+
+window.addEventListener('scroll', throttledScroll);
+```
+
+### useMemoizedObject
+```tsx
+import { useMemoizedObject } from './src/hooks/usePerformance';
+
+const memoUser = useMemoizedObject(user, [user.id, user.name]);
+```
+
+### useLazyImage
+```tsx
+import { useLazyImage } from './src/hooks/usePerformance';
+
+const { imageSrc, isLoading, error } = useLazyImage(urlImagem);
+<img src={imageSrc} alt="Imagem" />
+```
+
+### useIntersectionObserver
+```tsx
+import { useIntersectionObserver } from './src/hooks/usePerformance';
+
+const { observe, unobserve } = useIntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // lógica ao entrar na tela
+    }
+  });
+});
+
+// use observe(ref.current) para observar um elemento
+```
