@@ -291,7 +291,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="w-full px-2 sm:px-4 py-4 sm:py-8 pt-8 min-h-[calc(100vh-80px)] max-w-full overflow-x-hidden" role="main">
+    <div className="w-full px-2 sm:px-4 py-4 sm:py-8 min-h-[calc(100vh-80px)] max-w-full overflow-x-hidden" role="main">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
