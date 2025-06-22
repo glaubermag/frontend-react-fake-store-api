@@ -123,11 +123,11 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
             {formattedPrice}
           </span>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2 w-full">
+        <div className="flex flex-row gap-1 w-full">
           <Button
             onClick={handleAddToCart}
             disabled={isInCart}
-            className="w-full sm:w-auto text-sm px-2 py-2 whitespace-nowrap flex items-center justify-center"
+            className="w-1/2 sm:w-auto text-xs sm:text-sm px-1 sm:px-2 py-2 whitespace-nowrap flex items-center justify-center"
             variant={isInCart ? "secondary" : "default"}
           >
             <ShoppingCart className="h-4 w-4 mr-0 sm:mr-2" />
@@ -135,11 +135,12 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ product }) => {
           </Button>
           <Link 
             to={`/products/${product.id}`}
-            className="w-full sm:w-auto"
+            className="w-1/2 sm:w-auto"
             tabIndex={-1}
           >
-            <Button variant="outline" className="w-full sm:w-auto text-sm px-2 py-2 whitespace-nowrap truncate">
-              Ver Detalhes
+            <Button variant="outline" className="w-full sm:w-auto text-xs sm:text-sm px-1 sm:px-2 py-2 whitespace-nowrap truncate flex items-center justify-center">
+              <span className="truncate block sm:hidden">Ver</span>
+              <span className="hidden sm:block">Ver Detalhes</span>
             </Button>
           </Link>
         </div>

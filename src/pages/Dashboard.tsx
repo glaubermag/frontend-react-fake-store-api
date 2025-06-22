@@ -291,20 +291,20 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="w-full px-2 sm:px-4 py-4 sm:py-8 pt-20 lg:pt-24 min-h-[calc(100vh-80px)] container mx-auto" role="main">
+    <div className="w-full px-2 sm:px-4 py-4 sm:py-8 pt-8 min-h-[calc(100vh-80px)] max-w-full overflow-x-hidden" role="main">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         <div className="mb-8">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-2">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Nossos Produtos
             </h1>
             {isAuthenticated && (
-              <div className="flex gap-2">
-                <Button onClick={() => setIsFormOpen(true)} className="bg-green-600 hover:bg-green-700">
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <Button onClick={() => setIsFormOpen(true)} className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
                   <Plus className="h-4 w-4 mr-2" />
                   Novo Produto
                 </Button>
@@ -318,6 +318,7 @@ const Dashboard = () => {
                   }}
                   variant="outline"
                   disabled={productsLoading}
+                  className="w-full sm:w-auto"
                 >
                   <RefreshCw className={`h-4 w-4 mr-2 ${productsLoading ? 'animate-spin' : ''}`} />
                   Atualizar

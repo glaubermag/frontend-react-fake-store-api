@@ -81,35 +81,35 @@ const Cart = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <div className="flex items-center justify-between mb-8 mt-8">
-          <div className="flex items-center gap-4">
-            <Button asChild variant="ghost">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 mt-8 gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center sm:text-left">Carrinho de Compras</h1>
+            <p className="text-gray-600 text-center sm:text-left">
+              {itemCount} {itemCount === 1 ? 'item' : 'itens'} no seu carrinho
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto justify-center sm:justify-end">
+            <Button asChild variant="ghost" className="w-full sm:w-auto">
               <Link to="/products">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Continuar Comprando
               </Link>
             </Button>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Carrinho de Compras</h1>
-              <p className="text-gray-600">
-                {itemCount} {itemCount === 1 ? 'item' : 'itens'} no seu carrinho
-              </p>
-            </div>
+            {items.length > 0 && (
+              <Button
+                variant="outline"
+                onClick={clearCart}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50 w-full sm:w-auto"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Limpar Carrinho
+              </Button>
+            )}
           </div>
-          {items.length > 0 && (
-            <Button
-              variant="outline"
-              onClick={clearCart}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Limpar Carrinho
-            </Button>
-          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-4 col-span-full">
             {items.map((item, index) => (
               <motion.div
                 key={item.id}
@@ -119,31 +119,31 @@ const Cart = () => {
               >
                 <Card>
                   <CardContent className="p-6">
-                    <div className="flex gap-4">
-                      <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                    <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start text-center sm:text-left">
+                      <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 mx-auto sm:mx-0">
                         <img
                           src={item.image}
                           alt={item.title}
                           className="w-full h-full object-contain"
                         />
                       </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start mb-2">
-                          <h2 className="font-semibold text-lg line-clamp-2">
+                      <div className="flex-1 w-full flex flex-col gap-2">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                          <h2 className="font-semibold text-base sm:text-lg line-clamp-2 w-full">
                             {item.title}
                           </h2>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => removeItem(item.id)}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 self-center sm:self-auto"
                             aria-label="Remover item"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 w-full">
+                          <div className="flex items-center justify-center sm:justify-start gap-2">
                             <Button
                               variant="outline"
                               size="sm"
@@ -165,11 +165,11 @@ const Cart = () => {
                               <Plus className="h-3 w-3" />
                             </Button>
                           </div>
-                          <div className="text-right">
-                            <div className="text-lg font-bold text-green-600">
+                          <div className="text-center sm:text-right w-full sm:w-auto">
+                            <div className="text-base sm:text-lg font-bold text-green-600">
                               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price * item.quantity)}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-xs sm:text-sm text-gray-500">
                               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price)} cada
                             </div>
                           </div>
@@ -186,8 +186,9 @@ const Cart = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
+            className="col-span-full lg:col-span-1"
           >
-            <Card className="sticky top-8">
+            <Card className="lg:sticky lg:top-8">
               <CardHeader>
                 <CardTitle>Resumo do Pedido</CardTitle>
               </CardHeader>

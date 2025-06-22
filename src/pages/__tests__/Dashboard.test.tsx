@@ -330,9 +330,11 @@ describe('Dashboard', () => {
   it('deve ter responsividade', () => {
     renderWithRouter(<Dashboard />);
     
-    // Verificar se há classes responsivas
+    // Verificar se há classes responsivas corretas
     const container = screen.getByRole('main');
-    expect(container).toHaveClass('container');
+    expect(container).toHaveClass('w-full');
+    expect(container).toHaveClass('max-w-full');
+    expect(container).toHaveClass('overflow-x-hidden');
   });
 
   it('deve ter filtros funcionando', async () => {
